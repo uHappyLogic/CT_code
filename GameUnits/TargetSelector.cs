@@ -1,55 +1,78 @@
 ﻿using System.Linq;
+using Assets.Scripts.Core;
 using Assets.Scripts.GameUnits.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts.GameUnits
 {
-    public class TargetSelector
-    {
-        public static TargetSelector GetInstance()
-        {
-            if (_targetSelector == null)
-            {
-                Debug.Log("Target selector initialized");
-                _targetSelector = new TargetSelector();
-            }
+	public class TargetSelector
+	{
+		public static TargetSelector GetInstance()
+		{
+			if (_targetSelector == null)
+			{
+				Debug.Log("Target selector initialized");
+				_targetSelector = new TargetSelector();
+			}
 
-            return _targetSelector;
-        }
+			return _targetSelector;
+		}
 
-        public GameUnit GetNearestHostileUnit(GameUnit attacker)
-        {
-            GameUnit nearestHostile = null;
-            float minDistance = float.MaxValue;
+		public GameActor GetNearestHostileUnit(GameUnit attacker)
+		{
+			HostileUnitSearchResult nearestHostileUnit = SearchForNearest(_unitsManager, attacker);
+			HostileUnitSearchResult nearestHostileBuilding = SearchForNearest(_buildingsManager, attacker);
 
-            foreach (var currentGameObject in _unitsManager.GetRegistered().Where(
-                u => u.ActorAttributes.Team != attacker.ActorAttributes.Team && u.ActorAttributes.HealthPoints > 0f)
-            )
-            {
-                float currentDistance = Vector3.Distance(
-                    attacker.Transform.localPosition,
-                    currentGameObject.Transform.localPosition
-                );
+			if (nearestHostileUnit.Distance <= nearestHostileBuilding.Distance)
+				return nearestHostileUnit.GameUnit;
+			else
+				return nearestHostileBuilding.GameUnit;
+		}
 
-                if (currentDistance > minDistance)
-                    continue;
 
-                minDistance = currentDistance;
-                nearestHostile = currentGameObject;
-            }
+		private struct HostileUnitSearchResult
+		{
+			public GameActor GameUnit { get; set; }
+			public float Distance { get; set; }
+		}
 
-            return nearestHostile;
-        }
+		private static HostileUnitSearchResult SearchForNearest<T, TS>(SingletonCapabilityManager<T, TS> unitsManager, GameUnit attacker)
+			where TS : GameActor
+		{
+			HostileUnitSearchResult result = new HostileUnitSearchResult
+			{
+				GameUnit = null,
+				Distance = float.MaxValue
+			};
 
-        private TargetSelector()
-        {
-            _unitsManager = UnitsManager.GetInstance();
-            _buildingsManager = BuildingsManager.GetInstance();
-        }
+			foreach (var currentGameObject in unitsManager.GetRegistered().Where(
+				u => u.ActorAttributes.Team != attacker.ActorAttributes.Team && u.ActorAttributes.HealthPoints > 0f)
+			)
+			{
+				float currentDistance = Vector3.Distance(
+					attacker.Transform.localPosition,
+					currentGameObject.Transform.localPosition
+				);
 
-        private static TargetSelector _targetSelector;
+				if (currentDistance > result.Distance)
+					continue;
 
-        private UnitsManager _unitsManager;
-        private BuildingsManager _buildingsManager;
-    }
+				result.Distance = currentDistance;
+				result.GameUnit = currentGameObject;
+			}
+
+			return result;
+		}
+
+		private TargetSelector()
+		{
+			_unitsManager = UnitsManager.GetInstance();
+			_buildingsManager = BuildingsManager.GetInstance();
+		}
+
+		private static TargetSelector _targetSelector;
+
+		private readonly UnitsManager _unitsManager;
+		private readonly BuildingsManager _buildingsManager;
+	}
 }

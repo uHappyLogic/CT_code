@@ -1,44 +1,42 @@
 ﻿using Assets.Scripts.GameUnits;
-using Assets.Scripts.Gui;
 using UnityEngine;
 
 namespace Assets.Scripts.Core
 {
-    class OrderedInitializer : MonoBehaviour
-    {
-        public GameObject GUI;
-        public GameObject Statistics; 
+	internal class OrderedInitializer : MonoBehaviour
+	{
+		public GameObject GUI;
+		public GameObject Statistics;
 
-        public void Start()
-        {
-            Debug.Log("Initializing in order");
+		public void Start()
+		{
+			Debug.Log("Initializing in order");
 
-            UnitDestroyer.SetInstance(GetComponent<UnitDestroyer>());
+			UpdateablesManager updateablesManager = GetComponent<UpdateablesManager>();
+			updateablesManager.InitInOrder();
 
-            UpdateablesManager updateablesManager = GetComponent<UpdateablesManager>();
-            updateablesManager.InitInOrder();
+			new BuildingsManager().InitInOrder();
+			new UnitsManager().InitInOrder();
 
-            new BuildingsManager().InitInOrder();
-            new UnitsManager().InitInOrder();
+			Statistics.GetComponent<StrictInitializedMonoBehaviour>().InitInOrder();
 
-            var ud = UnitDestroyer.GetInstance();
+			updateablesManager.Add(UnitsManager.GetInstance());
+			updateablesManager.Add(BuildingsManager.GetInstance());
 
-            Statistics.GetComponent<StrictInitializedMonoBehaviour>().InitInOrder();
+			foreach (var preplayBuildingInitializer in GetComponents<PreplayBuildingInitializer>())
+			{
+				preplayBuildingInitializer.InitInOrder();
+				Destroy(preplayBuildingInitializer);
+			}
 
-            updateablesManager.Add(UnitsManager.GetInstance());
-            updateablesManager.Add(BuildingsManager.GetInstance());
+			foreach (var initializableChild in GUI.GetComponentsInChildren<IInOrderInitializable>())
+			{
+				initializableChild.InitInOrder();
+			}
 
-            foreach (var preplayBuildingInitializer in GetComponents<PreplayBuildingInitializer>())
-            {
-                preplayBuildingInitializer.InitInOrder();
-            }
+			Debug.Log("Initializing in order successfully finished");
 
-            foreach (var initializableChild in GUI.GetComponentsInChildren<IInOrderInitializable>())
-            {
-                initializableChild.InitInOrder();
-            }
-
-            Debug.Log("Initializing in order successfully finished");
-        }
-    }
+			// Destroy(gameObject);
+		}
+	}
 }

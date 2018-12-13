@@ -1,21 +1,22 @@
 ﻿namespace Assets.Scripts.GameUnits.Generic
 {
-    public abstract class GameBuilding : GameActor
-    {
-        public BuildingAttributes BuildingAttributes { get; private set; }
+	public abstract class GameBuilding : GameActor
+	{
+		public BuildingAttributes BuildingAttributes { get; private set; }
 
-        public override void Init()
-        {
-            base.Init();
-            BuildingAttributes = GetComponent<BuildingAttributes>();
-        }
+		public override void Init()
+		{
+			base.Init();
 
-        public abstract void UpdateWhenUnderConstruction();
+			BuildingAttributes = GetComponent<BuildingAttributes>();
+		}
 
-        public abstract bool IsConstructionComplete();
+		public abstract void UpdateWhenUnderConstruction();
 
-        public abstract void OnConstructionComplete();
+		public abstract bool IsConstructionComplete();
 
-        public abstract void CompleteConstruction();
-    }
+		public abstract void OnConstructionComplete();
+
+		public abstract void CompleteConstruction();
+	}
 }

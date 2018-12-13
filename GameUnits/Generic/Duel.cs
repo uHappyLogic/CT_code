@@ -3,25 +3,30 @@ using UnityEngine;
 
 namespace Assets.Scripts.GameUnits.Generic
 {
-    public class Duel : MonoBehaviour
-    {
-        public GameUnit Attacker { get; set; }
-        public GameActor Defender { get; set; }
+	public class Duel : MonoBehaviour
+	{
+		public GameUnit Attacker { get; set; }
+		public GameActor Defender { get; set; }
 
-        public void ApplyResult()
-        {
-            if (Defender == null)
-                return;
+		public void ApplyResult()
+		{
+			if (Defender == null)
+				return;
 
-            bool defenderAlive = Defender.ActorAttributes.HealthPoints > 0f;
+			bool wasDefenderAliveBeforeAttack = IsAlive(Defender);
 
-            Defender.ActorAttributes.HealthPoints -= Attacker.UnitAttributes.AttackPoints;
+			Defender.ActorAttributes.HealthPoints -= Attacker.UnitAttributes.AttackPoints;
 
-            if (defenderAlive &&  Defender.ActorAttributes.HealthPoints <= 0)
-            {
-                KillsCounter.GetInstance().Increment(Defender.ActorAttributes.Team);
-                Defender.OnDeadAction();
-            }
-        }
-    }
+			if (wasDefenderAliveBeforeAttack && !IsAlive(Defender))
+			{
+				KillsCounter.GetInstance().Increment(Defender.ActorAttributes.Team);
+				Defender.OnDeadAction();
+			}
+		}
+
+		private static bool IsAlive(GameActor ga)
+		{
+			return ga.ActorAttributes.HealthPoints > 0f;
+		}
+	}
 }

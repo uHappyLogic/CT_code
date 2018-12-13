@@ -3,35 +3,38 @@ using Assets.Scripts.GameUnits;
 using Assets.Scripts.GameUnits.Generic;
 using UnityEngine;
 
-public class BuildOnClick : MonoBehaviour {
+public class BuildOnClick : MonoBehaviour
+{
 
-    public GameObject BuildingToBuild;
-    public TerrainPointerController TerrainPointer;
+	public GameObject BuildingToBuild;
+	public TerrainPointerController TerrainPointer;
 
-    // Use this for initialization
-    void Start () {
-		
+	// Use this for initialization
+	private void Start()
+	{
+
 	}
-	
+
 	// Update is called once per frame
-	void Update () {
-		
+	private void Update()
+	{
+
 	}
 
-    private void OnMouseDown()
-    {
-        var newFactory = Instantiate(BuildingToBuild);
+	private void OnMouseDown()
+	{
+		var newFactory = Instantiate(BuildingToBuild);
 
-        newFactory.transform.position = TerrainPointer.transform.position + Vector3.up * 3f;
+		newFactory.transform.position = TerrainPointer.transform.position + Vector3.up * 3f;
 
-        GameBuilding gameBuilding = newFactory.GetComponent<GameBuilding>();
-        gameBuilding.Init();
-        gameBuilding.ActorAttributes.InitActorAttributes(Team.TEAM_A);
-        gameBuilding.CompleteConstruction();
-        gameBuilding.OnConstructionComplete();
+		GameBuilding gameBuilding = newFactory.GetComponent<GameBuilding>();
+		gameBuilding.Init();
+		gameBuilding.ActorAttributes.InitActorAttributes(Team.TEAM_A);
+		gameBuilding.CompleteConstruction();
+		gameBuilding.OnConstructionComplete();
 
-        BuildingsManager.GetInstance().Add(gameBuilding);
+		BuildingsManager.GetInstance().Add(gameBuilding);
 
-        TerrainPointer.GetComponent<TerrainPointerController>().DetachObject();
-    }
+		TerrainPointer.GetComponent<TerrainPointerController>().DetachObject();
+	}
 }

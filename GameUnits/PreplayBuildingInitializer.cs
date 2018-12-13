@@ -5,33 +5,33 @@ using UnityEngine;
 
 namespace Assets.Scripts.GameUnits
 {
-    class PreplayBuildingInitializer : MonoBehaviour, IInOrderInitializable
-    {
-        public Team Team;
-        public List<GameObject> PrePlayBuildings;
-        public List<GameObject> PrePlayUnits;
+	internal class PreplayBuildingInitializer : MonoBehaviour, IInOrderInitializable
+	{
+		public Team Team;
+		public List<GameObject> PrePlayBuildings;
+		public List<GameObject> PrePlayUnits;
 
-        public void InitInOrder()
-        {
-            foreach (var prePlayBuilding in PrePlayBuildings)
-            {
-                GameBuilding gameBuilding = prePlayBuilding.GetComponent<GameBuilding>();
-                gameBuilding.Init();
-                gameBuilding.ActorAttributes.InitActorAttributes(Team);
-                gameBuilding.CompleteConstruction();
-                gameBuilding.OnConstructionComplete();
+		public void InitInOrder()
+		{
+			foreach (var prePlayBuilding in PrePlayBuildings)
+			{
+				GameBuilding gameBuilding = prePlayBuilding.GetComponent<GameBuilding>();
+				gameBuilding.Init();
+				gameBuilding.ActorAttributes.InitActorAttributes(Team);
+				gameBuilding.CompleteConstruction();
+				gameBuilding.OnConstructionComplete();
 
-                BuildingsManager.GetInstance().Add(gameBuilding);
-            }
+				BuildingsManager.GetInstance().Add(gameBuilding);
+			}
 
-            foreach (var prePlayUnit in PrePlayUnits)
-            {
-                GameUnit gameUnit = prePlayUnit.GetComponent<GameUnit>();
-                gameUnit.ActorAttributes.InitActorAttributes(Team);
-                gameUnit.Init();
+			foreach (var prePlayUnit in PrePlayUnits)
+			{
+				GameUnit gameUnit = prePlayUnit.GetComponent<GameUnit>();
+				gameUnit.ActorAttributes.InitActorAttributes(Team);
+				gameUnit.Init();
 
-                UnitsManager.GetInstance().Add(gameUnit);
-            }
-        }
-    }
+				UnitsManager.GetInstance().Add(gameUnit);
+			}
+		}
+	}
 }
