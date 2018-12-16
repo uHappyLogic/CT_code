@@ -57,10 +57,12 @@ namespace Assets.Scripts.GameUnits
 			else
 			{
 				SetTarget(Duel.Defender.Transform.localPosition);
-				RotateTowards(Duel.Defender.Transform);
+				
 
 				Animator.SetBool("IsAttacking", false);
 			}
+
+			RotateTowards(Duel.Defender.Transform);
 		}
 
 		private void SetTarget(Vector3 target)

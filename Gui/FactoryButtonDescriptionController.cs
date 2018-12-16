@@ -12,15 +12,16 @@ namespace Assets.Scripts.Gui
 		public GameObject Factory;
 		public GameObject FactoryBuildPreview;
 		public TerrainPointerController TerrainPointerController;
+		public BuildingAttributes BuildingAttributes { get; private set; }
 
 		public void InitInOrder()
 		{
 			_button = GetComponent<Button>();
 			_gameUnitFactory = Factory.GetComponent<GameUnitFactory>();
-			_buildingAttributes = _gameUnitFactory.GetComponent<BuildingAttributes>();
+			BuildingAttributes = _gameUnitFactory.GetComponent<BuildingAttributes>();
 			_unitAttributes = _gameUnitFactory.PrefabToSpawn.GetComponent<UnitAttributes>();
 
-			_buildingAttributes.InitActorAttributes(Team.TEAM_GAME);
+			BuildingAttributes.InitActorAttributes(Team.TEAM_GAME);
 			_unitAttributes.InitActorAttributes(Team.TEAM_GAME);
 
 			_button.GetComponentInChildren<Text>().text = GetDescription();
@@ -53,8 +54,8 @@ namespace Assets.Scripts.Gui
 		{
 			StringBuilder content = new StringBuilder();
 			content
-				.Append(_buildingAttributes.ActorTypeName).Append("\n")
-				.Append(String.Format("Cost : {0}\n", _buildingAttributes.BuildCost))
+				.Append(BuildingAttributes.ActorTypeName).Append("\n")
+				.Append(String.Format("Cost : {0}\n", BuildingAttributes.BuildCost))
 				.Append(String.Format("Unit type : {0}\n", _unitAttributes.ActorTypeName))
 				.Append(String.Format("HP : {0}\n", _unitAttributes.HealthPoints))
 				.Append(String.Format("AP : {0}\n", _unitAttributes.AttackPoints))
@@ -64,10 +65,8 @@ namespace Assets.Scripts.Gui
 			return content.ToString();
 		}
 
-		private BuildingAttributes _buildingAttributes;
 		private UnitAttributes _unitAttributes;
 		private GameUnitFactory _gameUnitFactory;
 		private Button _button;
-
 	}
 }
