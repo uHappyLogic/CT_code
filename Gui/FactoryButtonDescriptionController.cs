@@ -46,7 +46,7 @@ namespace Assets.Scripts.Gui
 				instantiatedPrefab.GetComponent<BuildOnClick>().BuildingToBuild = Factory;
 				instantiatedPrefab.GetComponent<BuildOnClick>().TerrainPointer = TerrainPointerController;
 
-				TerrainPointerController.AttachObject(instantiatedPrefab);
+				TerrainPointerController.AttachObject(instantiatedPrefab, TerrainPointerController.GridAllignementOption.ALLIGN_TO_GRID);
 			}
 		}
 

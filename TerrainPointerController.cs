@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.Core;
+using UnityEngine;
 
 namespace Assets.Scripts
 {
@@ -6,26 +7,19 @@ namespace Assets.Scripts
 	{
 		public Terrain Terrain;
 		public GameObject AttachedObject;
+		public GridAllignementProvider GridAllignementProvider;
 
-		private void Start()
+		public enum GridAllignementOption
 		{
-			_collider = Terrain.GetComponent<Collider>();
-			_transform = GetComponent<Transform>();
+			ALLIGN_TO_GRID,
+			NOT_ALLIGN_TO_GRID
 		}
 
-		private void Update()
-		{
-			RaycastHit hit;
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			if (_collider.Raycast(ray, out hit, Mathf.Infinity))
-			{
-				_transform.position = hit.point + Vector3.up;
-			}
-		}
-
-		public void AttachObject(GameObject instantiatedPrefab)
+		public void AttachObject(GameObject instantiatedPrefab, GridAllignementOption gridAllignementOption)
 		{
 			DetachObject();
+
+			_gridAllignementOption = gridAllignementOption;
 
 			instantiatedPrefab.transform.parent = transform;
 			instantiatedPrefab.transform.localPosition = Vector3.up * 3.8f;
@@ -37,12 +31,39 @@ namespace Assets.Scripts
 			if (AttachedObject == null)
 				return;
 
+			_gridAllignementOption = GridAllignementOption.NOT_ALLIGN_TO_GRID;
+
 			transform.DetachChildren();
 			Destroy(AttachedObject);
 			AttachedObject = null;
 		}
 
+		private void Start()
+		{
+			_collider = Terrain.GetComponent<Collider>();
+			_transform = GetComponent<Transform>();
+			_gridAllignementOption = GridAllignementOption.NOT_ALLIGN_TO_GRID;
+		}
+
+		private void Update()
+		{
+			RaycastHit hit;
+			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+			if (_collider.Raycast(ray, out hit, Mathf.Infinity))
+			{
+				if (_gridAllignementOption == GridAllignementOption.ALLIGN_TO_GRID)
+				{
+					_transform.position = GridAllignementProvider.GetGridPosition(hit.point);
+				}
+				else
+				{
+					_transform.position = hit.point + Vector3.up;
+				}
+			}
+		}
+
 		private Collider _collider;
 		private Transform _transform;
+		private GridAllignementOption _gridAllignementOption;
 	}
 }
