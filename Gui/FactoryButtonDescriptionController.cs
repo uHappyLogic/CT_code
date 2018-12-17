@@ -11,7 +11,6 @@ namespace Assets.Scripts.Gui
 	{
 		public GameObject Factory;
 		public GameObject FactoryBuildPreview;
-		public TerrainPointerController TerrainPointerController;
 		public BuildingAttributes BuildingAttributes { get; private set; }
 
 		public void InitInOrder()
@@ -33,10 +32,10 @@ namespace Assets.Scripts.Gui
 		{
 			Debug.Log("Button clicked");
 
-			if (TerrainPointerController.transform.childCount > 0)
+			if (ControlPointerProvider.GetInstance().AttachedObject != null)
 			{
 				Debug.Log("Detaching children");
-
+				ControlPointerProvider.GetInstance().DetachObject();
 			}
 			else
 			{
@@ -44,9 +43,9 @@ namespace Assets.Scripts.Gui
 
 				GameObject instantiatedPrefab = Instantiate(FactoryBuildPreview);
 				instantiatedPrefab.GetComponent<BuildOnClick>().BuildingToBuild = Factory;
-				instantiatedPrefab.GetComponent<BuildOnClick>().TerrainPointer = TerrainPointerController;
+				instantiatedPrefab.GetComponent<BuildOnClick>().TerrainPointer = ControlPointerProvider.GetInstance();
 
-				TerrainPointerController.AttachObject(instantiatedPrefab, TerrainPointerController.GridAllignementOption.ALLIGN_TO_GRID);
+				ControlPointerProvider.GetInstance().AttachObject(instantiatedPrefab, TerrainPointerController.GridAllignementOption.ALLIGN_TO_GRID);
 			}
 		}
 

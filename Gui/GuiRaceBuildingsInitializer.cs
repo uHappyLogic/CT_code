@@ -6,7 +6,6 @@ namespace Assets.Scripts.Gui
 {
 	internal class GuiRaceBuildingsInitializer : MonoBehaviour
 	{
-		public TerrainPointerController TerrainPointerControllerObject;
 		public Button ButtonToSpawnPrefab;
 		public GameObject RacePrefab;
 
@@ -15,8 +14,6 @@ namespace Assets.Scripts.Gui
 			var list = RacePrefab.GetComponents<RaceBuildingEntry>();
 
 				//.OrderBy(a => a.Building.GetComponent<GameBuilding>().BuildingAttributes.BuildCost);
-
-			var nolist = RacePrefab.GetComponent<RaceBuildingEntry>();
 
 			int i = 0;
 			float buttonWidth = ButtonToSpawnPrefab.GetComponent<RectTransform>().rect.width;
@@ -28,9 +25,6 @@ namespace Assets.Scripts.Gui
 
 				ButtonToSpawnPrefab.GetComponent<FactoryButtonDescriptionController>()
 					.FactoryBuildPreview = entry.BuildingPreview;
-
-				ButtonToSpawnPrefab.GetComponent<FactoryButtonDescriptionController>()
-					.TerrainPointerController = TerrainPointerControllerObject;
 
 				var inst = Instantiate(ButtonToSpawnPrefab);
 

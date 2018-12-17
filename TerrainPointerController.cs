@@ -1,11 +1,11 @@
 ﻿using Assets.Scripts.Core;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Assets.Scripts
 {
-	public class TerrainPointerController : MonoBehaviour
+	public class TerrainPointerController : NetworkBehaviour
 	{
-		public Terrain Terrain;
 		public GameObject AttachedObject;
 		public GridAllignementProvider GridAllignementProvider;
 
@@ -38,8 +38,24 @@ namespace Assets.Scripts
 			AttachedObject = null;
 		}
 
+		public override void OnStartAuthority()
+		{
+			base.OnStartAuthority();
+
+			if (hasAuthority)
+				ControlPointerProvider.SetTerrainPointerController(this);
+		}
+
 		private void Start()
 		{
+			if (Terrain == null)
+			{
+				Terrain = GameObject.Find("WarTheater").GetComponent<Terrain>();
+				GridAllignementProvider = Terrain.GetComponent<GridAllignementProvider>();
+			}
+
+			// name += GetInstanceID();
+
 			_collider = Terrain.GetComponent<Collider>();
 			_transform = GetComponent<Transform>();
 			_gridAllignementOption = GridAllignementOption.NOT_ALLIGN_TO_GRID;
@@ -47,6 +63,12 @@ namespace Assets.Scripts
 
 		private void Update()
 		{
+			if (hasAuthority != true)
+				return;
+
+			if (!Input.GetKey(KeyCode.E))
+				return;
+
 			RaycastHit hit;
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			if (_collider.Raycast(ray, out hit, Mathf.Infinity))
@@ -64,6 +86,7 @@ namespace Assets.Scripts
 
 		private Collider _collider;
 		private Transform _transform;
+		private Terrain Terrain;
 		private GridAllignementOption _gridAllignementOption;
 	}
 }

@@ -9,6 +9,9 @@ namespace Assets.Scripts
 
 		private void Update()
 		{
+			if (!Input.GetKey(KeyCode.U))
+				return;
+
 			float mousePosX = Input.mousePosition.x;
 			float mousePosY = Input.mousePosition.y;
 			float scroll = Input.GetAxis("Mouse ScrollWheel");
