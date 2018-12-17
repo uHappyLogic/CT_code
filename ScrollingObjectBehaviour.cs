@@ -31,13 +31,13 @@ namespace Assets.Scripts
 			if (mousePosY < scrollDistance)
 			{
 				if (transform.position.z > ObservableField.transform.position.z - ObservableField.terrainData.size.z)
-					transform.Translate(transform.up * -scrollSpeed * Time.deltaTime);
+					transform.Translate(Vector3.forward * -scrollSpeed * Time.deltaTime, Space.World);
 			}
 
 			if (mousePosY >= Screen.height - scrollDistance)
 			{
 				if (transform.position.z < ObservableField.transform.position.z)
-					transform.Translate(transform.up * scrollSpeed * Time.deltaTime);
+					transform.Translate(Vector3.forward * scrollSpeed * Time.deltaTime, Space.World);
 			}
 
 			if (Math.Abs(scroll) > 0.0001f)
