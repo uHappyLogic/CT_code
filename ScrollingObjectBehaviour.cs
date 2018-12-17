@@ -1,50 +1,53 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
 
 namespace Assets.Scripts
 {
-    class ScrollingObjectBehaviour : MonoBehaviour
-    {
-        void Update()
-        {
-            float mousePosX = Input.mousePosition.x;
-            float mousePosY = Input.mousePosition.y;
-            float scroll = Input.GetAxis("Mouse ScrollWheel");
+	internal class ScrollingObjectBehaviour : MonoBehaviour
+	{
+		public Terrain ObservableField;
 
-            int scrollDistance = 5;
-            float scrollSpeed = 150;
+		private void Update()
+		{
+			float mousePosX = Input.mousePosition.x;
+			float mousePosY = Input.mousePosition.y;
+			float scroll = Input.GetAxis("Mouse ScrollWheel");
 
-            if (mousePosX < scrollDistance)
-            {
-                transform.Translate(Vector3.right * -scrollSpeed * Time.deltaTime);
-            }
+			int scrollDistance = 5;
+			float scrollSpeed = 150;
 
-            if (mousePosX >= Screen.width - scrollDistance)
-            {
-                transform.Translate(Vector3.right * scrollSpeed * Time.deltaTime);
-            }
+			if (mousePosX < scrollDistance)
+			{
+				if (transform.position.x > ObservableField.transform.position.x)
+					transform.Translate(Vector3.right * -scrollSpeed * Time.deltaTime);
+			}
 
-            if (mousePosY < scrollDistance)
-            {
-                transform.Translate(transform.up * -scrollSpeed * Time.deltaTime);
-            }
+			if (mousePosX >= Screen.width - scrollDistance)
+			{
+				if (transform.position.x < ObservableField.transform.position.x + ObservableField.terrainData.size.x )
+					transform.Translate(Vector3.right * scrollSpeed * Time.deltaTime);
+			}
 
-            if (mousePosY >= Screen.height - scrollDistance)
-            {
-                transform.Translate(transform.up * scrollSpeed * Time.deltaTime);
-            }
+			if (mousePosY < scrollDistance)
+			{
+				if (transform.position.z > ObservableField.transform.position.z - ObservableField.terrainData.size.z)
+					transform.Translate(transform.up * -scrollSpeed * Time.deltaTime);
+			}
 
-            if (Math.Abs(scroll) > 0.0001f)
-            {
+			if (mousePosY >= Screen.height - scrollDistance)
+			{
+				if (transform.position.z < ObservableField.transform.position.z)
+					transform.Translate(transform.up * scrollSpeed * Time.deltaTime);
+			}
 
-                Vector3 transition = transform.forward * scroll * scrollSpeed * 10f * Time.deltaTime;
-                //Debug.Log(transition);
-                transform.position += transition;
-            }
+			if (Math.Abs(scroll) > 0.0001f)
+			{
 
-        }
-    }
+				Vector3 transition = transform.forward * scroll * scrollSpeed * 10f * Time.deltaTime;
+				//Debug.Log(transition);
+				transform.position += transition;
+			}
+
+		}
+	}
 }
