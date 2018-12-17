@@ -1,10 +1,16 @@
-﻿namespace Assets.Scripts.GameUnits.Generic
-{
-    public abstract class BuildingAttributes : ActorAttributes
-    {
-        public float MainActionCooldown { get; set; }
-        public float ConstructionTime { get; set; }
-        public int BuildCost { get; set; }
+﻿using UnityEngine;
 
+namespace Assets.Scripts.GameUnits.Generic
+{
+    public class BuildingAttributes : ActorAttributes
+    {
+		[SerializeField]
+		public float MainActionCooldown;
+
+		[SerializeField]
+		public float ConstructionTime;
+
+		[SerializeField]
+		public int BuildCost;
     }
 }

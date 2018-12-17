@@ -17,7 +17,7 @@ namespace Assets.Scripts.GameUnits
 			{
 				GameBuilding gameBuilding = prePlayBuilding.GetComponent<GameBuilding>();
 				gameBuilding.Init();
-				gameBuilding.ActorAttributes.InitActorAttributes(Team);
+				gameBuilding.ActorAttributes.Team = Team;
 				gameBuilding.CompleteConstruction();
 				gameBuilding.OnConstructionComplete();
 
@@ -27,7 +27,7 @@ namespace Assets.Scripts.GameUnits
 			foreach (var prePlayUnit in PrePlayUnits)
 			{
 				GameUnit gameUnit = prePlayUnit.GetComponent<GameUnit>();
-				gameUnit.ActorAttributes.InitActorAttributes(Team);
+				gameUnit.ActorAttributes.Team = Team;
 				gameUnit.Init();
 
 				UnitsManager.GetInstance().Add(gameUnit);

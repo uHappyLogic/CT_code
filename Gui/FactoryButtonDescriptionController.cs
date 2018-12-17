@@ -21,8 +21,8 @@ namespace Assets.Scripts.Gui
 			BuildingAttributes = _gameUnitFactory.GetComponent<BuildingAttributes>();
 			_unitAttributes = _gameUnitFactory.PrefabToSpawn.GetComponent<UnitAttributes>();
 
-			BuildingAttributes.InitActorAttributes(Team.TEAM_GAME);
-			_unitAttributes.InitActorAttributes(Team.TEAM_GAME);
+			BuildingAttributes.Team = Team.TEAM_GAME;
+			_unitAttributes.Team = Team.TEAM_GAME;
 
 			_button.GetComponentInChildren<Text>().text = GetDescription();
 

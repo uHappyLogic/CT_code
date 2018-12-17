@@ -6,10 +6,13 @@ namespace Assets.Scripts.GameUnits.Generic
 {
     public abstract class ActorAttributes : MonoBehaviour
     {
-        public Team Team { get; set; }
-        public float HealthPoints { get; set; }
-        public string ActorTypeName { get; set; }
+		[SerializeField]
+		public Team Team;
 
-        public abstract void InitActorAttributes(Team owner);
+		[SerializeField]
+		public float HealthPoints;
+
+		[SerializeField]
+		public string ActorTypeName;
     }
 }

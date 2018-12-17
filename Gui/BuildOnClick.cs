@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class BuildOnClick : MonoBehaviour
 {
-
 	public GameObject BuildingToBuild;
 	public TerrainPointerController TerrainPointer;
 
@@ -29,7 +28,7 @@ public class BuildOnClick : MonoBehaviour
 
 		GameBuilding gameBuilding = newFactory.GetComponent<GameBuilding>();
 		gameBuilding.Init();
-		gameBuilding.ActorAttributes.InitActorAttributes(Team.TEAM_A);
+		gameBuilding.ActorAttributes.Team = Team.TEAM_A;
 		gameBuilding.CompleteConstruction();
 		gameBuilding.OnConstructionComplete();
 

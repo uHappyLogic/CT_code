@@ -94,7 +94,7 @@ namespace Assets.Scripts.GameUnits.Generic
 			GameUnit gameUnit = instantiatedPrefab.GetComponent<GameUnit>();
 
 			gameUnit.Init();
-			gameUnit.ActorAttributes.InitActorAttributes(BuildingAttributes.Team);
+			gameUnit.ActorAttributes.Team = BuildingAttributes.Team;
 			gameUnit.gameObject.name = gameUnit.GetId();
 
 			UnitsManager.GetInstance().Add(gameUnit);

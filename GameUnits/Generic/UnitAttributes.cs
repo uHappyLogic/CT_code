@@ -1,8 +1,13 @@
-﻿namespace Assets.Scripts.GameUnits.Generic
+﻿using UnityEngine;
+
+namespace Assets.Scripts.GameUnits.Generic
 {
-    public abstract class UnitAttributes : ActorAttributes
+    public class UnitAttributes : ActorAttributes
     {
-        public float AttackPoints { get; set; }
-        public float AttackRange { get; set; }
+		[SerializeField]
+		public float AttackPoints;
+
+		[SerializeField]
+		public float AttackRange;
     }
 }
