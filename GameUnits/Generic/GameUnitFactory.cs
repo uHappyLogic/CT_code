@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Timers;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Assets.Scripts.GameUnits.Generic
 {
@@ -43,7 +44,7 @@ namespace Assets.Scripts.GameUnits.Generic
 
 		public override void OnConstructionComplete()
 		{
-			Debug.Log(String.Format("Construction completed for {0}", GetId()));
+			Debug.Log(string.Format("Construction completed for {0}", GetId()));
 			_timer = new Timer(TimeSpan.FromSeconds(BuildingAttributes.MainActionCooldown).TotalMilliseconds);
 			_timer.AutoReset = true;
 			_timer.Elapsed += SetSpawnOn;
@@ -88,14 +89,22 @@ namespace Assets.Scripts.GameUnits.Generic
 
 		private void Spawn()
 		{
+			CmdSpwanUnit();
+		}
+
+		[Command]
+		private void CmdSpwanUnit()
+		{
 			_shouldSpawn = false;
 
-			var instantiatedPrefab = Instantiate<GameObject>(PrefabToSpawn, _productionOutput, Quaternion.identity);
+			var instantiatedPrefab = Instantiate(PrefabToSpawn, _productionOutput, Quaternion.identity);
 			GameUnit gameUnit = instantiatedPrefab.GetComponent<GameUnit>();
 
 			gameUnit.Init();
 			gameUnit.ActorAttributes.Team = BuildingAttributes.Team;
 			gameUnit.gameObject.name = gameUnit.GetId();
+
+			NetworkServer.Spawn(instantiatedPrefab);
 
 			UnitsManager.GetInstance().Add(gameUnit);
 		}

@@ -32,20 +32,15 @@ namespace Assets.Scripts.Gui
 		{
 			Debug.Log("Button clicked");
 
-			if (ControlPointerProvider.GetInstance().AttachedObject != null)
+			if (TerrainPointerControllerProvider.GetInstance().IsObjectAttached)
 			{
 				Debug.Log("Detaching children");
-				ControlPointerProvider.GetInstance().DetachObject();
+				TerrainPointerControllerProvider.GetInstance().DetachObject();
 			}
 			else
 			{
 				Debug.Log("Attaching children");
-
-				GameObject instantiatedPrefab = Instantiate(FactoryBuildPreview);
-				instantiatedPrefab.GetComponent<BuildOnClick>().BuildingToBuild = Factory;
-				instantiatedPrefab.GetComponent<BuildOnClick>().TerrainPointer = ControlPointerProvider.GetInstance();
-
-				ControlPointerProvider.GetInstance().AttachObject(instantiatedPrefab, TerrainPointerController.GridAllignementOption.ALLIGN_TO_GRID);
+				TerrainPointerControllerProvider.GetInstance().AttachObject(FactoryBuildPreview, TerrainPointerController.GridAllignementOption.ALLIGN_TO_GRID);
 			}
 		}
 

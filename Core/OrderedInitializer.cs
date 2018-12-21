@@ -5,7 +5,10 @@ namespace Assets.Scripts.Core
 {
 	internal class OrderedInitializer : MonoBehaviour
 	{
+		[SerializeField]
 		public GameObject GUI;
+
+		[SerializeField]
 		public GameObject Statistics;
 
 		public void Start()

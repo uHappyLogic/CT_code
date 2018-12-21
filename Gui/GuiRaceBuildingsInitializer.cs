@@ -13,9 +13,8 @@ namespace Assets.Scripts.Gui
 		{
 			var list = RacePrefab.GetComponents<RaceBuildingEntry>();
 
-				//.OrderBy(a => a.Building.GetComponent<GameBuilding>().BuildingAttributes.BuildCost);
+			//.OrderBy(a => a.Building.GetComponent<GameBuilding>().BuildingAttributes.BuildCost);
 
-			int i = 0;
 			float buttonWidth = ButtonToSpawnPrefab.GetComponent<RectTransform>().rect.width;
 
 			foreach (RaceBuildingEntry entry in list)
@@ -29,8 +28,6 @@ namespace Assets.Scripts.Gui
 				var inst = Instantiate(ButtonToSpawnPrefab);
 
 				inst.transform.SetParent(transform, false);
-				//inst.transform.localRotation = transform.localRotation;
-				//inst.transform.localScale = transform.localScale;
 			}
 		}
 

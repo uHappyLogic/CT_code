@@ -7,8 +7,13 @@ namespace Assets.Scripts.GameUnits
 {
 	internal class PreplayBuildingInitializer : MonoBehaviour, IInOrderInitializable
 	{
+		[SerializeField]
 		public Team Team;
+
+		[SerializeField]
 		public List<GameObject> PrePlayBuildings;
+
+		[SerializeField]
 		public List<GameObject> PrePlayUnits;
 
 		public void InitInOrder()

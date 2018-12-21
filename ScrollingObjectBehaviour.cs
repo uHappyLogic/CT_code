@@ -5,6 +5,7 @@ namespace Assets.Scripts
 {
 	internal class ScrollingObjectBehaviour : MonoBehaviour
 	{
+		[SerializeField]
 		public Terrain ObservableField;
 
 		private void Update()

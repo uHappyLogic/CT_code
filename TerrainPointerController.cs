@@ -1,4 +1,6 @@
 ﻿using Assets.Scripts.Core;
+using Assets.Scripts.Multi;
+using Assets.Scripts.Utils;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -6,7 +8,9 @@ namespace Assets.Scripts
 {
 	public class TerrainPointerController : NetworkBehaviour
 	{
-		public GameObject AttachedObject;
+		[SyncVar]
+		public bool IsObjectAttached;
+
 		public GridAllignementProvider GridAllignementProvider;
 
 		public enum GridAllignementOption
@@ -15,27 +19,34 @@ namespace Assets.Scripts
 			NOT_ALLIGN_TO_GRID
 		}
 
-		public void AttachObject(GameObject instantiatedPrefab, GridAllignementOption gridAllignementOption)
+		/*
+		 * Invoked by client
+		 */
+		public void AttachObject(GameObject objectToAttachPrefab, GridAllignementOption gridAllignementOption)
 		{
 			DetachObject();
 
+			CmdAttachObject(objectToAttachPrefab.GetStaticAssetUniqueId(), PlayerScript.GetInstance().Team);
+
 			_gridAllignementOption = gridAllignementOption;
 
-			instantiatedPrefab.transform.parent = transform;
-			instantiatedPrefab.transform.localPosition = Vector3.up * 3.8f;
-			AttachedObject = instantiatedPrefab;
+			if (_gridAllignementOption == GridAllignementOption.ALLIGN_TO_GRID)
+			{
+				_transform.position = GridAllignementProvider.GetGridPosition(transform.localPosition);
+			}
 		}
 
+		/*
+		 * Invoked by client
+		 */
 		public void DetachObject()
 		{
-			if (AttachedObject == null)
+			if (!IsObjectAttached)
 				return;
 
 			_gridAllignementOption = GridAllignementOption.NOT_ALLIGN_TO_GRID;
 
-			transform.DetachChildren();
-			Destroy(AttachedObject);
-			AttachedObject = null;
+			CmdDetachObject();
 		}
 
 		public override void OnStartAuthority()
@@ -43,7 +54,44 @@ namespace Assets.Scripts
 			base.OnStartAuthority();
 
 			if (hasAuthority)
-				ControlPointerProvider.SetTerrainPointerController(this);
+				TerrainPointerControllerProvider.SetTerrainPointerController(this);
+		}
+
+		[Command]
+		public void CmdAttachObject(string objectGuid, Team team)
+		{
+			var instantiatedPrefab = Instantiate(
+				StaticAssetsManagerScript.GetInstance().GetRegistered(objectGuid),
+				transform.position,
+				Quaternion.identity
+			);
+
+			instantiatedPrefab.transform.parent = transform;
+			instantiatedPrefab.transform.localPosition = Vector3.up * 3.8f;
+
+			IsObjectAttached = true;
+			var res = PlayersManager.GetPlayersManager().Get(team).connectionToClient;
+
+
+			NetworkServer.SpawnWithClientAuthority(instantiatedPrefab, res);
+
+			RpcSetParent(instantiatedPrefab.name);
+		}
+
+		[ClientRpc]
+		public void RpcSetParent(string name)
+		{
+			GameObject.Find(name).transform.parent = transform;
+		}
+
+		[Command]
+		public void CmdDetachObject()
+		{
+			if (!IsObjectAttached)
+				return;
+
+			IsObjectAttached = false;
+			NetworkServer.Destroy(transform.GetChild(0).gameObject);
 		}
 
 		private void Start()

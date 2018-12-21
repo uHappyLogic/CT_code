@@ -1,9 +1,10 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Assets.Scripts.GameUnits.Generic
 {
-	public abstract class GameActor : MonoBehaviour
+	public abstract class GameActor : NetworkBehaviour
 	{
 		public ActorAttributes ActorAttributes { get; private set; }
 		public Transform Transform { get; private set; }

@@ -10,15 +10,32 @@ namespace Assets.Scripts.Multi
 		public void Start()
 		{
 			name += GetInstanceID();
+		
+			if (isLocalPlayer)
+				_instance = this;
 
-			CmdSpawn();
+			if (isServer)
+			{
+				CmdSpawnPointer();
+				Team = PlayersManager.GetPlayersManager().Add(this);
+			}
 		}
-
+		
 		[Command]
-		public void CmdSpawn()
+		public void CmdSpawnPointer()
 		{
 			GameObject pointer = (GameObject)Instantiate(TerrainPointer, transform.position, Quaternion.identity);
 			NetworkServer.SpawnWithClientAuthority(pointer, connectionToClient);
 		}
+
+		public static PlayerScript GetInstance()
+		{
+			return _instance;
+		}
+
+		private static PlayerScript _instance;
+
+		[SyncVar]
+		public Team Team;	
 	}
 }

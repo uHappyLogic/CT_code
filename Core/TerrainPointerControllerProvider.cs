@@ -2,7 +2,7 @@
 
 namespace Assets.Scripts.Core
 {
-	public static class ControlPointerProvider
+	public static class TerrainPointerControllerProvider
 	{
 		public static TerrainPointerController GetInstance()
 		{

@@ -4,6 +4,11 @@
 	{
 		public BuildingAttributes BuildingAttributes { get; private set; }
 
+		public void Start()
+		{
+
+		}
+
 		public override void Init()
 		{
 			base.Init();

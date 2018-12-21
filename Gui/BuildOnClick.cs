@@ -1,12 +1,13 @@
 ﻿using Assets.Scripts;
+using Assets.Scripts.Core;
 using Assets.Scripts.GameUnits;
 using Assets.Scripts.GameUnits.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class BuildOnClick : MonoBehaviour
+public class BuildOnClick : NetworkBehaviour
 {
 	public GameObject BuildingToBuild;
-	public TerrainPointerController TerrainPointer;
 
 	// Use this for initialization
 	private void Start()
@@ -22,9 +23,17 @@ public class BuildOnClick : MonoBehaviour
 
 	private void OnMouseDown()
 	{
+		// TODO: check player authority
+		CmdSpawnBuilding();
+		TerrainPointerControllerProvider.GetInstance().DetachObject();
+	}
+
+	[Command]
+	private void CmdSpawnBuilding()
+	{
 		var newFactory = Instantiate(BuildingToBuild);
 
-		newFactory.transform.position = TerrainPointer.transform.position + Vector3.up * 3f;
+		newFactory.transform.position = TerrainPointerControllerProvider.GetInstance().transform.position + Vector3.up * 3f;
 
 		GameBuilding gameBuilding = newFactory.GetComponent<GameBuilding>();
 		gameBuilding.Init();
@@ -32,8 +41,8 @@ public class BuildOnClick : MonoBehaviour
 		gameBuilding.CompleteConstruction();
 		gameBuilding.OnConstructionComplete();
 
-		BuildingsManager.GetInstance().Add(gameBuilding);
+		NetworkServer.Spawn(newFactory);
 
-		TerrainPointer.GetComponent<TerrainPointerController>().DetachObject();
+		BuildingsManager.GetInstance().Add(gameBuilding);
 	}
 }
