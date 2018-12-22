@@ -70,7 +70,7 @@ namespace Assets.Scripts
 			instantiatedPrefab.transform.localPosition = Vector3.up * 3.8f;
 
 			IsObjectAttached = true;
-			var res = PlayersManager.GetPlayersManager().Get(team).connectionToClient;
+			var res = PlayersManager.GetInstance().Get(team).connectionToClient;
 
 
 			NetworkServer.SpawnWithClientAuthority(instantiatedPrefab, res);

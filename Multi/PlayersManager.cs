@@ -6,7 +6,7 @@ namespace Assets.Scripts.Multi
 {
 	public class PlayersManager
 	{
-		public static PlayersManager GetPlayersManager()
+		public static PlayersManager GetInstance()
 		{
 			if (_playersManager == null)
 				_playersManager = new PlayersManager();

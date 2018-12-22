@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
+﻿using UnityEngine.Networking;
 
 namespace Assets.Scripts.Core
 {
-    public abstract class  StrictInitialized
+	public abstract class  StrictInitialized : NetworkBehaviour
     {
         public void InitInOrder()
         {

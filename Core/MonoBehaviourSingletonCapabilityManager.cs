@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
+﻿using System.Collections.Generic;
 
 namespace Assets.Scripts.Core
 {
-    public abstract class MonoBehaviourSingletonCapabilityManager<TS, T>
+	public abstract class MonoBehaviourSingletonCapabilityManager<TS, T>
         : MonoBehaviourSingletonCapability<TS>
     {
         protected override void CoreInitialize()

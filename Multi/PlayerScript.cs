@@ -17,7 +17,7 @@ namespace Assets.Scripts.Multi
 			if (isServer)
 			{
 				CmdSpawnPointer();
-				Team = PlayersManager.GetPlayersManager().Add(this);
+				Team = PlayersManager.GetInstance().Add(this);
 			}
 		}
 		

@@ -3,7 +3,7 @@ using Assets.Scripts.GameUnits.Generic;
 
 namespace Assets.Scripts.GameUnits
 {
-	public class UnitsManager : SingletonCapabilityManager<UnitsManager, GameUnit>
+	public class UnitsManager : MonoBehaviourSingletonCapabilityGameActorManager<UnitsManager, GameUnit>
 	{
 		protected override void CustomInitialization()
 		{

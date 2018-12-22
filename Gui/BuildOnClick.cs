@@ -2,6 +2,7 @@
 using Assets.Scripts.Core;
 using Assets.Scripts.GameUnits;
 using Assets.Scripts.GameUnits.Generic;
+using Assets.Scripts.Multi;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -23,21 +24,24 @@ public class BuildOnClick : NetworkBehaviour
 
 	private void OnMouseDown()
 	{
-		// TODO: check player authority
-		CmdSpawnBuilding();
+		CmdSpawnBuilding(
+			TerrainPointerControllerProvider.GetInstance().transform.position + Vector3.up * 3f
+			, PlayerScript.GetInstance().Team
+		);
+
 		TerrainPointerControllerProvider.GetInstance().DetachObject();
 	}
 
 	[Command]
-	private void CmdSpawnBuilding()
+	private void CmdSpawnBuilding(Vector3 position, Team team)
 	{
 		var newFactory = Instantiate(BuildingToBuild);
 
-		newFactory.transform.position = TerrainPointerControllerProvider.GetInstance().transform.position + Vector3.up * 3f;
+		newFactory.transform.position = position;
 
 		GameBuilding gameBuilding = newFactory.GetComponent<GameBuilding>();
 		gameBuilding.Init();
-		gameBuilding.ActorAttributes.Team = Team.TEAM_A;
+		gameBuilding.ActorAttributes.Team = team;
 		gameBuilding.CompleteConstruction();
 		gameBuilding.OnConstructionComplete();
 

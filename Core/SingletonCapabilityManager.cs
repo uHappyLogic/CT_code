@@ -30,7 +30,7 @@ namespace Assets.Scripts.Core
 			UpdateLifecycle();
 		}
 
-		abstract public void UpdateLifecycle();
+		public abstract void UpdateLifecycle();
 
 		public void Add(T actor)
 		{
@@ -48,7 +48,7 @@ namespace Assets.Scripts.Core
 			return _registered;
 		}
 
-		abstract public string GetName();
+		public abstract string GetName();
 
 		protected List<T> _registered;
 	}
