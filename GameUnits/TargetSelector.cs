@@ -36,7 +36,7 @@ namespace Assets.Scripts.GameUnits
 			public float Distance { get; set; }
 		}
 
-		private static HostileUnitSearchResult SearchForNearest<T, TS>(SingletonCapabilityManager<T, TS> unitsManager, GameUnit attacker)
+		private static HostileUnitSearchResult SearchForNearest<T, TS>(GameActorsManager<T, TS> unitsManager, GameUnit attacker)
 			where TS : GameActor
 		{
 			HostileUnitSearchResult result = new HostileUnitSearchResult

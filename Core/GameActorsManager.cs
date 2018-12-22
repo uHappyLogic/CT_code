@@ -3,26 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.GameUnits.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Assets.Scripts.Core
 {
-	public abstract class SingletonCapabilityManager<TS, T>
-		: SingletonCapability<TS>, IUpdateable
+	public abstract class GameActorsManager<TS, T>
+		: IUpdateable
 		where T : GameActor
 	{
-		protected override void CoreInitialize()
-		{
-			base.CoreInitialize();
-
-			_registered = new List<T>();
-		}
-
 		public void PerformUpdate()
 		{
 			foreach (var unit in _registered.Where(u => u.CanBeUnregistered()))
 			{
-				Debug.Log(String.Format("<color=orange>Destroying</color> unit {0}", unit.GetId()));
-				UnityEngine.Object.Destroy(unit.GameObject);
+				Debug.Log(string.Format("<color=orange>Destroying</color> unit {0}", unit.GetId()));
+				NetworkServer.Destroy(unit.GameObject);
 			}
 
 			_registered.RemoveAll(u => u.CanBeUnregistered());
@@ -50,6 +44,6 @@ namespace Assets.Scripts.Core
 
 		public abstract string GetName();
 
-		protected List<T> _registered;
+		protected List<T> _registered = new List<T>();
 	}
 }

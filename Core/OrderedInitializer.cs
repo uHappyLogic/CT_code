@@ -10,21 +10,16 @@ namespace Assets.Scripts.Core
 
 		[SerializeField]
 		public GameObject Statistics;
+		
+		[SerializeField]
+		public UpdateablesManager UpdateablesManager;
 
 		public void Start()
 		{
 			Debug.Log("Initializing in order");
 
-			UpdateablesManager updateablesManager = GetComponent<UpdateablesManager>();
-			updateablesManager.InitInOrder();
-
-			new BuildingsManager().InitInOrder();
-			new UnitsManager().InitInOrder();
-
-			Statistics.GetComponent<StrictInitializedMonoBehaviour>().InitInOrder();
-
-			updateablesManager.Add(UnitsManager.GetInstance());
-			updateablesManager.Add(BuildingsManager.GetInstance());
+			UpdateablesManager.Add(UnitsManager.GetInstance());
+			UpdateablesManager.Add(BuildingsManager.GetInstance());
 
 			foreach (var preplayBuildingInitializer in GetComponents<PreplayBuildingInitializer>())
 			{
@@ -38,8 +33,6 @@ namespace Assets.Scripts.Core
 			}
 
 			Debug.Log("Initializing in order successfully finished");
-
-			// Destroy(gameObject);
 		}
 	}
 }

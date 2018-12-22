@@ -1,15 +1,11 @@
-﻿using Assets.Scripts.Core;
+﻿using System.Collections.Generic;
+using Assets.Scripts.Core;
 using UnityEngine;
 
 namespace Assets.Scripts.GameUnits
 {
-	public class UpdateablesManager : MonoBehaviourSingletonCapabilityManager<UpdateablesManager, IUpdateable>
+	public class UpdateablesManager : MonoBehaviour
 	{
-		protected override void CustomInitialization()
-		{
-
-		}
-
 		public void Update()
 		{
 			foreach (var updateable in _registered)
@@ -17,15 +13,14 @@ namespace Assets.Scripts.GameUnits
 				updateable.PerformUpdate();
 			}
 		}
-
-		public override void LogAddOperation(IUpdateable ctor)
+		
+		public void Add(IUpdateable actor)
 		{
 			Debug.Log("Updateable added to updateable manager");
+
+			_registered.Add(actor);
 		}
 
-		public override string GetName()
-		{
-			return "Updateable manager";
-		}
+		protected List<IUpdateable> _registered = new List<IUpdateable>();
 	}
 }

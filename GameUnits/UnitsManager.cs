@@ -3,11 +3,14 @@ using Assets.Scripts.GameUnits.Generic;
 
 namespace Assets.Scripts.GameUnits
 {
-	public class UnitsManager : MonoBehaviourSingletonCapabilityGameActorManager<UnitsManager, GameUnit>
+	public class UnitsManager : GameActorsManager<UnitsManager, GameUnit>
 	{
-		protected override void CustomInitialization()
+		public static UnitsManager GetInstance()
 		{
+			if (_unitsManager == null)
+				_unitsManager = new UnitsManager();
 
+			return _unitsManager;
 		}
 
 		public override void UpdateLifecycle()
@@ -25,5 +28,7 @@ namespace Assets.Scripts.GameUnits
 		{
 			return "UnitsManager";
 		}
+
+		private static UnitsManager _unitsManager;
 	}
 }

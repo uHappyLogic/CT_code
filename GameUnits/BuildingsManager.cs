@@ -3,11 +3,14 @@ using Assets.Scripts.GameUnits.Generic;
 
 namespace Assets.Scripts.GameUnits
 {
-	public class BuildingsManager : SingletonCapabilityManager<BuildingsManager, GameBuilding>
+	public class BuildingsManager : GameActorsManager<BuildingsManager, GameBuilding>
 	{
-		protected override void CustomInitialization()
+		public static BuildingsManager GetInstance()
 		{
+			if (_buildingsManager == null)
+				_buildingsManager = new BuildingsManager();
 
+			return _buildingsManager;
 		}
 
 		public override void UpdateLifecycle()
@@ -31,5 +34,7 @@ namespace Assets.Scripts.GameUnits
 		{
 			return "BuildingsManager";
 		}
+
+		private static BuildingsManager _buildingsManager;
 	}
 }
