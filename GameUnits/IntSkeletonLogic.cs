@@ -1,11 +1,19 @@
 ﻿using Assets.Scripts.GameUnits.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Mirror;
 
 namespace Assets.Scripts.GameUnits
 {
 	public class IntSkeletonLogic : GameUnit
 	{
+		public new void Start()
+		{
+			base.Start();
+
+			UnitsManager.GetInstance().Add(this);
+		}
+
 		public override void UpdateAliveGameUnit()
 		{
 			UpdateLogic();
@@ -57,7 +65,7 @@ namespace Assets.Scripts.GameUnits
 			else
 			{
 				SetTarget(Duel.Defender.Transform.localPosition);
-				
+
 
 				Animator.SetBool("IsAttacking", false);
 			}
@@ -83,7 +91,6 @@ namespace Assets.Scripts.GameUnits
 
 			if (target.Collider != null)
 			{
-				Debug.Log("<color=green>[Debug]</color> Collider available for distance measurement {" + GetId() + " : " + target.GetId() + "}");
 				distance = Vector3.Distance(transform.position, target.Collider.ClosestPoint(transform.position));
 			}
 			else
@@ -101,7 +108,9 @@ namespace Assets.Scripts.GameUnits
 			transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
 		}
 
+		[SyncVar]
 		private bool _canBeUnregistered;
+
 		private float _timeOfDie;
 	}
 }

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-	internal class ScrollingObjectBehaviour : MonoBehaviour
+	public class ScrollingObjectBehaviour : MonoBehaviour
 	{
 		[SerializeField]
 		public Terrain ObservableField;
@@ -48,7 +48,7 @@ namespace Assets.Scripts
 			{
 
 				Vector3 transition = transform.forward * scroll * scrollSpeed * 10f * Time.deltaTime;
-				//Debug.Log(transition);
+				//VisibleLogger.GetInstance().LogDebug(transition);
 				transform.position += transition;
 			}
 

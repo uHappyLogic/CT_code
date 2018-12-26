@@ -5,19 +5,20 @@ namespace Assets.Scripts.GameUnits.Generic
 {
 	public abstract class GameUnit : GameActor
 	{
-		public Animator Animator { get; private set; }
-		public NavMeshAgent NavMeshAgent { get; private set; }
-		public Duel Duel { get; private set; }
-		public UnitAttributes UnitAttributes { get; set; }
+		[SerializeField]
+		public Animator Animator;
 
-		public override void Init()
+		[SerializeField]
+		public NavMeshAgent NavMeshAgent;
+
+		[SerializeField]
+		public Duel Duel;
+
+		[SerializeField]
+		public UnitAttributes UnitAttributes;
+
+		public void Start()
 		{
-			base.Init();
-
-			UnitAttributes = GetComponent<UnitAttributes>();
-			Animator = GetComponent<Animator>();
-			NavMeshAgent = GetComponent<NavMeshAgent>();
-			Duel = GetComponent<Duel>();
 			Duel.Attacker = this;
 		}
 	}

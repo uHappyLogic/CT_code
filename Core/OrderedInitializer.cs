@@ -1,22 +1,23 @@
 ﻿using Assets.Scripts.GameUnits;
+using Assets.Scripts.Gui;
 using UnityEngine;
 
 namespace Assets.Scripts.Core
 {
-	internal class OrderedInitializer : MonoBehaviour
+	public class OrderedInitializer : MonoBehaviour
 	{
 		[SerializeField]
-		public GameObject GUI;
+		public GameObject Gui;
 
 		[SerializeField]
 		public GameObject Statistics;
-		
+
 		[SerializeField]
 		public UpdateablesManager UpdateablesManager;
 
 		public void Start()
 		{
-			Debug.Log("Initializing in order");
+			VisibleLogger.GetInstance().LogDebug("Initializing in order");
 
 			UpdateablesManager.Add(UnitsManager.GetInstance());
 			UpdateablesManager.Add(BuildingsManager.GetInstance());
@@ -27,12 +28,12 @@ namespace Assets.Scripts.Core
 				Destroy(preplayBuildingInitializer);
 			}
 
-			foreach (var initializableChild in GUI.GetComponentsInChildren<IInOrderInitializable>())
+			foreach (var initializableChild in Gui.GetComponentsInChildren<IInOrderInitializable>())
 			{
 				initializableChild.InitInOrder();
 			}
 
-			Debug.Log("Initializing in order successfully finished");
+			VisibleLogger.GetInstance().LogDebug("Initializing in order successfully finished");
 		}
 	}
 }

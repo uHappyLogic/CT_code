@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.GameUnits.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
+using Mirror;
+using Assets.Scripts.Gui;
 
 namespace Assets.Scripts.Core
 {
@@ -15,8 +15,8 @@ namespace Assets.Scripts.Core
 		{
 			foreach (var unit in _registered.Where(u => u.CanBeUnregistered()))
 			{
-				Debug.Log(string.Format("<color=orange>Destroying</color> unit {0}", unit.GetId()));
-				NetworkServer.Destroy(unit.GameObject);
+				VisibleLogger.GetInstance().LogDebug(string.Format("<color=orange>Destroying</color> unit {0}", unit.GetId()));
+				NetworkServer.Destroy(unit.gameObject);
 			}
 
 			_registered.RemoveAll(u => u.CanBeUnregistered());
@@ -28,7 +28,7 @@ namespace Assets.Scripts.Core
 
 		public void Add(T actor)
 		{
-			Debug.Log(String.Format(
+			VisibleLogger.GetInstance().LogDebug(string.Format(
 				"Unit with id {0} registered to {1}",
 				actor.GetId(),
 				GetName()

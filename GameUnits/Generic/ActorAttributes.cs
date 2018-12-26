@@ -1,15 +1,16 @@
-﻿using System;
-using System.Text;
-using UnityEngine;
+﻿using UnityEngine;
+using Mirror;
 
 namespace Assets.Scripts.GameUnits.Generic
 {
-    public abstract class ActorAttributes : MonoBehaviour
+	public abstract class ActorAttributes : NetworkBehaviour
     {
 		[SerializeField]
+		[SyncVar]
 		public Team Team;
 
 		[SerializeField]
+		[SyncVar]
 		public float HealthPoints;
 
 		[SerializeField]

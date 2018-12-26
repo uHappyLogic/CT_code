@@ -1,9 +1,8 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets.Scripts.Multi
 {
-	class GameObjectGuidIdentificator : MonoBehaviour
+	public class GameObjectGuidIdentificator : MonoBehaviour
 	{
 		[SerializeField]
 		public string Guid;

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Assets.Scripts.Core;
+using Assets.Scripts.Gui;
 using UnityEngine;
 
 namespace Assets.Scripts.GameUnits
@@ -16,7 +17,7 @@ namespace Assets.Scripts.GameUnits
 		
 		public void Add(IUpdateable actor)
 		{
-			Debug.Log("Updateable added to updateable manager");
+			VisibleLogger.GetInstance().LogDebug("Updateable added to updateable manager");
 
 			_registered.Add(actor);
 		}

@@ -1,27 +1,27 @@
 ﻿using System;
 using UnityEngine;
-using UnityEngine.Networking;
+using Mirror;
 
 namespace Assets.Scripts.GameUnits.Generic
 {
 	public abstract class GameActor : NetworkBehaviour
 	{
-		public ActorAttributes ActorAttributes { get; private set; }
-		public Transform Transform { get; private set; }
-		public GameObject GameObject { get; set; }
-		public Collider Collider { get; set; }
+		[SerializeField]
+		public ActorAttributes ActorAttributes;
 
-		public virtual void Init()
-		{
-			ActorAttributes = GetComponent<ActorAttributes>();
-			Transform = GetComponent<Transform>();
-			GameObject = gameObject;
-			Collider = GetComponent<Collider>();
-		}
+		[SerializeField]
+		public Transform Transform;
 
-		public String GetId()
+		[SerializeField]
+		[Tooltip("Currently this object is only available for buildings")]
+		public Collider Collider;
+
+		public string GetId()
 		{
-			return String.Format("{0}_{1}", ActorAttributes.ActorTypeName, GetHashCode());
+			return string.Format("{0}_{1}_{2}"
+				, ActorAttributes.ActorTypeName
+				, GetHashCode()
+				, ActorAttributes.Team.ToString());
 		}
 
 		/*

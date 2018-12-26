@@ -30,16 +30,16 @@ namespace Assets.Scripts.Gui
 
 		public void OnClick()
 		{
-			Debug.Log("Button clicked");
+			VisibleLogger.GetInstance().LogDebug("Button clicked");
 
 			if (TerrainPointerControllerProvider.GetInstance().IsObjectAttached)
 			{
-				Debug.Log("Detaching children");
+				VisibleLogger.GetInstance().LogDebug("Detaching children");
 				TerrainPointerControllerProvider.GetInstance().DetachObject();
 			}
 			else
 			{
-				Debug.Log("Attaching children");
+				VisibleLogger.GetInstance().LogDebug("Attaching children");
 				TerrainPointerControllerProvider.GetInstance().AttachObject(FactoryBuildPreview, TerrainPointerController.GridAllignementOption.ALLIGN_TO_GRID);
 			}
 		}

@@ -1,39 +1,44 @@
-﻿using System;
-using System.Timers;
+﻿using Assets.Scripts.Multi;
 using UnityEngine;
-using UnityEngine.Networking;
+using UnityEngine.AI;
+using Mirror;
+using Assets.Scripts.Gui;
 
 namespace Assets.Scripts.GameUnits.Generic
 {
 	public class GameUnitFactory : GameBuilding
 	{
+		[SerializeField]
+		[Tooltip("This prefab will be spawned by this building")]
 		public GameObject PrefabToSpawn;
 
-		public override void Init()
+		public new void Start()
 		{
-			Debug.Log("Factory initialization");
-			base.Init();
+			base.Start();
 
 			_productionOutput = Transform.localPosition + Transform.localRotation * new Vector3(8, 0, 0);
+			_targetPositionAfterBuild = Transform.localPosition;
 
 			_isConstructionComplete = false;
 
 			_constructionStartTime = Time.time;
 
-			Debug.Log(String.Format("Factory [{0}] initialization finished successfully", GetId()));
-		}
-
-		private void Stop()
-		{
-			_timer.Stop();
-			_timer.Close();
+			VisibleLogger.GetInstance().LogDebug(string.Format("Factory [{0}] initialization finished successfully", GetId()));
 		}
 
 		public override void UpdateWhenUnderConstruction()
 		{
-			Transform.localPosition += Vector3.up * Time.deltaTime * 1f;
+			float totalBuildingTime = Time.time - _constructionStartTime;
 
-			if (Time.time - _constructionStartTime >= BuildingAttributes.ConstructionTime)
+			Transform.localPosition = (
+				_targetPositionAfterBuild + new Vector3(
+						0
+						, (1 - ((totalBuildingTime) / BuildingAttributes.ConstructionTime)) * -10 
+						, 0
+					)
+			);
+
+			if (totalBuildingTime >= BuildingAttributes.ConstructionTime)
 				_isConstructionComplete = true;
 		}
 
@@ -44,11 +49,8 @@ namespace Assets.Scripts.GameUnits.Generic
 
 		public override void OnConstructionComplete()
 		{
-			Debug.Log(string.Format("Construction completed for {0}", GetId()));
-			_timer = new Timer(TimeSpan.FromSeconds(BuildingAttributes.MainActionCooldown).TotalMilliseconds);
-			_timer.AutoReset = true;
-			_timer.Elapsed += SetSpawnOn;
-			_timer.Start();
+			_timeOfLastSpawn = Time.time;
+			VisibleLogger.GetInstance().LogDebug(string.Format("Construction completed for {0}", GetId()));
 		}
 
 		public override void CompleteConstruction()
@@ -59,8 +61,8 @@ namespace Assets.Scripts.GameUnits.Generic
 		public override void OnDeadAction()
 		{
 			_timeOfDie = Time.time;
-			_shouldSpawn = false;
-			Stop();
+
+			Destroy(GetComponent<NavMeshObstacle>());
 		}
 
 		public override bool CanBeUnregistered()
@@ -70,56 +72,59 @@ namespace Assets.Scripts.GameUnits.Generic
 
 		public override void UpdateAliveGameUnit()
 		{
-			if (_shouldSpawn)
+			float totalSpawningTime = Time.time - _timeOfLastSpawn;
+
+			if (totalSpawningTime >= BuildingAttributes.MainActionCooldown)
 				Spawn();
 		}
 
 		public override void UpdateDeadGameUnit()
 		{
-			Transform.localPosition += Vector3.down * Time.deltaTime * 3f;
+			float totalDyingTime = Time.time - _timeOfDie;
 
-			if (Time.time - _timeOfDie > 8f)
+			Transform.localPosition = (
+				_targetPositionAfterBuild + new Vector3(
+						0
+						, (1 - ((totalDyingTime) / DYING_TIME)) * -10
+						, 0
+					)
+			);
+
+			if (totalDyingTime > DYING_TIME)
 				_canBeUnregistered = true;
-		}
-
-		private void SetSpawnOn(object sender, ElapsedEventArgs elapsedEventArgs)
-		{
-			_shouldSpawn = true;
 		}
 
 		private void Spawn()
 		{
+			_timeOfLastSpawn = Time.time;
 			CmdSpwanUnit();
 		}
 
 		[Command]
 		private void CmdSpwanUnit()
 		{
-			_shouldSpawn = false;
-
 			var instantiatedPrefab = Instantiate(PrefabToSpawn, _productionOutput, Quaternion.identity);
 			GameUnit gameUnit = instantiatedPrefab.GetComponent<GameUnit>();
 
-			gameUnit.Init();
 			gameUnit.ActorAttributes.Team = BuildingAttributes.Team;
 			gameUnit.gameObject.name = gameUnit.GetId();
 
-			NetworkServer.Spawn(instantiatedPrefab);
-
-			UnitsManager.GetInstance().Add(gameUnit);
+			NetworkServer.SpawnWithClientAuthority(
+				instantiatedPrefab,
+				PlayersManager.GetInstance().Get(BuildingAttributes.Team).connectionToClient
+			);
 		}
-
-		private bool _shouldSpawn;
-		private Timer _timer;
+		
 		private Vector3 _productionOutput = new Vector3(-50f, 0f, 15f);
+		private Vector3 _targetPositionAfterBuild;
 
 		private bool _canBeUnregistered;
+
+		private float _timeOfLastSpawn;
 		private float _timeOfDie;
-		private readonly Transform _transform;
-		private readonly ActorAttributes _actorAttributes;
-		private readonly GameObject _gameObject;
+		private const float DYING_TIME = 8f;
+
 		private bool _isConstructionComplete;
 		private float _constructionStartTime;
-
 	}
 }

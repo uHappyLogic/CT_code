@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace Assets.Scripts.Gui
 {
-	internal class GuiRaceBuildingsInitializer : MonoBehaviour
+	public class GuiRaceBuildingsInitializer : MonoBehaviour
 	{
 		public Button ButtonToSpawnPrefab;
 		public GameObject RacePrefab;

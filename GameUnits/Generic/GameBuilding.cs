@@ -1,19 +1,15 @@
-﻿namespace Assets.Scripts.GameUnits.Generic
+﻿using UnityEngine;
+
+namespace Assets.Scripts.GameUnits.Generic
 {
 	public abstract class GameBuilding : GameActor
 	{
-		public BuildingAttributes BuildingAttributes { get; private set; }
+		[SerializeField]
+		public BuildingAttributes BuildingAttributes;
 
 		public void Start()
 		{
-
-		}
-
-		public override void Init()
-		{
-			base.Init();
-
-			BuildingAttributes = GetComponent<BuildingAttributes>();
+			BuildingsManager.GetInstance().Add(this);
 		}
 
 		public abstract void UpdateWhenUnderConstruction();

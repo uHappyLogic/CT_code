@@ -17,8 +17,13 @@ namespace Assets.Scripts.GameUnits
 		{
 			foreach (var registeredGameUnit in _registered)
 			{
+				if (!registeredGameUnit.hasAuthority)
+					continue;
+
 				if (registeredGameUnit.ActorAttributes.HealthPoints > 0)
+				{
 					registeredGameUnit.UpdateAliveGameUnit();
+				}	
 				else
 					registeredGameUnit.UpdateDeadGameUnit();
 			}

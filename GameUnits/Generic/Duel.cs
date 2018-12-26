@@ -1,9 +1,9 @@
 ﻿using Assets.Scripts.Gui;
-using UnityEngine;
+using Mirror;
 
 namespace Assets.Scripts.GameUnits.Generic
 {
-	public class Duel : MonoBehaviour
+	public class Duel : NetworkBehaviour
 	{
 		public GameUnit Attacker { get; set; }
 		public GameActor Defender { get; set; }
@@ -15,13 +15,19 @@ namespace Assets.Scripts.GameUnits.Generic
 
 			bool wasDefenderAliveBeforeAttack = IsAlive(Defender);
 
-			Defender.ActorAttributes.HealthPoints -= Attacker.UnitAttributes.AttackPoints;
+			CmdPerfomAttack();
 
 			if (wasDefenderAliveBeforeAttack && !IsAlive(Defender))
 			{
 				KillsCounter.GetInstance().Increment(Defender.ActorAttributes.Team);
 				Defender.OnDeadAction();
 			}
+		}
+
+		[Command]
+		public void CmdPerfomAttack()
+		{
+			Defender.ActorAttributes.HealthPoints -= Attacker.UnitAttributes.AttackPoints;
 		}
 
 		private static bool IsAlive(GameActor ga)

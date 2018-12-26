@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.GameUnits
 {
-	internal class PreplayBuildingInitializer : MonoBehaviour, IInOrderInitializable
+	public class PreplayBuildingInitializer : MonoBehaviour, IInOrderInitializable
 	{
 		[SerializeField]
 		public Team Team;
@@ -21,7 +21,6 @@ namespace Assets.Scripts.GameUnits
 			foreach (var prePlayBuilding in PrePlayBuildings)
 			{
 				GameBuilding gameBuilding = prePlayBuilding.GetComponent<GameBuilding>();
-				gameBuilding.Init();
 				gameBuilding.ActorAttributes.Team = Team;
 				gameBuilding.CompleteConstruction();
 				gameBuilding.OnConstructionComplete();
@@ -33,7 +32,6 @@ namespace Assets.Scripts.GameUnits
 			{
 				GameUnit gameUnit = prePlayUnit.GetComponent<GameUnit>();
 				gameUnit.ActorAttributes.Team = Team;
-				gameUnit.Init();
 
 				UnitsManager.GetInstance().Add(gameUnit);
 			}

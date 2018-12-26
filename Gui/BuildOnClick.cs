@@ -1,10 +1,9 @@
 ﻿using Assets.Scripts;
 using Assets.Scripts.Core;
-using Assets.Scripts.GameUnits;
 using Assets.Scripts.GameUnits.Generic;
 using Assets.Scripts.Multi;
 using UnityEngine;
-using UnityEngine.Networking;
+using Mirror;
 
 public class BuildOnClick : NetworkBehaviour
 {
@@ -40,13 +39,11 @@ public class BuildOnClick : NetworkBehaviour
 		newFactory.transform.position = position;
 
 		GameBuilding gameBuilding = newFactory.GetComponent<GameBuilding>();
-		gameBuilding.Init();
 		gameBuilding.ActorAttributes.Team = team;
-		gameBuilding.CompleteConstruction();
-		gameBuilding.OnConstructionComplete();
 
-		NetworkServer.Spawn(newFactory);
-
-		BuildingsManager.GetInstance().Add(gameBuilding);
+		NetworkServer.SpawnWithClientAuthority(
+			newFactory,
+			PlayersManager.GetInstance().Get(team).connectionToClient
+		);
 	}
 }

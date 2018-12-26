@@ -2,7 +2,7 @@
 using Assets.Scripts.Multi;
 using Assets.Scripts.Utils;
 using UnityEngine;
-using UnityEngine.Networking;
+using Mirror;
 
 namespace Assets.Scripts
 {
@@ -53,8 +53,7 @@ namespace Assets.Scripts
 		{
 			base.OnStartAuthority();
 
-			if (hasAuthority)
-				TerrainPointerControllerProvider.SetTerrainPointerController(this);
+			TerrainPointerControllerProvider.SetTerrainPointerController(this);
 		}
 
 		[Command]

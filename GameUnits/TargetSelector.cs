@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Assets.Scripts.Core;
 using Assets.Scripts.GameUnits.Generic;
+using Assets.Scripts.Gui;
 using UnityEngine;
 
 namespace Assets.Scripts.GameUnits
@@ -11,7 +12,7 @@ namespace Assets.Scripts.GameUnits
 		{
 			if (_targetSelector == null)
 			{
-				Debug.Log("Target selector initialized");
+				VisibleLogger.GetInstance().LogDebug("Target selector initialized");
 				_targetSelector = new TargetSelector();
 			}
 
