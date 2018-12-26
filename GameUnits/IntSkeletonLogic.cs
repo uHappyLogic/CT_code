@@ -1,7 +1,7 @@
 ﻿using Assets.Scripts.GameUnits.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using Mirror;
+using Assets.Scripts.Gui;
 
 namespace Assets.Scripts.GameUnits
 {
@@ -12,6 +12,10 @@ namespace Assets.Scripts.GameUnits
 			base.Start();
 
 			UnitsManager.GetInstance().Add(this);
+
+			VisibleLogger.GetInstance().LogDebug(
+				string.Format("Start [{0}]", GetId())
+			);
 		}
 
 		public override void UpdateAliveGameUnit()
@@ -28,19 +32,18 @@ namespace Assets.Scripts.GameUnits
 			Transform.localPosition += Vector3.down * Time.deltaTime * 1f;
 
 			if (Time.time - _timeOfDie > 8f)
-				_canBeUnregistered = true;
+				CanBeUnregistered = true;
 		}
 
 		public override void OnDeadAction()
 		{
-			Animator.SetBool("IsDead", true);
-			Destroy(GetComponent<NavMeshAgent>());
-			_timeOfDie = Time.time;
-		}
+			VisibleLogger.GetInstance().LogDebug(
+				string.Format("OnDeadAction [{0}]", GetId())
+			);
 
-		public override bool CanBeUnregistered()
-		{
-			return _canBeUnregistered;
+			Animator.SetBool("IsDead", true);
+			_timeOfDie = Time.time;
+			Destroy(GetComponent<NavMeshAgent>());
 		}
 
 		private void UpdateLogic()
@@ -107,9 +110,6 @@ namespace Assets.Scripts.GameUnits
 			Quaternion lookRotation = Quaternion.LookRotation(direction);
 			transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
 		}
-
-		[SyncVar]
-		private bool _canBeUnregistered;
 
 		private float _timeOfDie;
 	}

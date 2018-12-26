@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.Core;
 using Assets.Scripts.GameUnits.Generic;
+using Assets.Scripts.Gui;
 
 namespace Assets.Scripts.GameUnits
 {
@@ -36,6 +37,14 @@ namespace Assets.Scripts.GameUnits
 		public override string GetName()
 		{
 			return "BuildingsManager";
+		}
+
+		protected override void LogAdded(GameBuilding actor)
+		{
+			VisibleLogger.GetInstance().LogDebug(string.Format(
+				"Building [{0}] registered",
+				actor.GetId()
+			));
 		}
 
 		private static BuildingsManager _buildingsManager;

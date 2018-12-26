@@ -1,6 +1,5 @@
-﻿using System;
+﻿using Mirror;
 using UnityEngine;
-using Mirror;
 
 namespace Assets.Scripts.GameUnits.Generic
 {
@@ -32,7 +31,8 @@ namespace Assets.Scripts.GameUnits.Generic
 		/*
          * If true then will be unregistered in next iteration, otherwise unit will remain registered
          */
-		public abstract bool CanBeUnregistered();
+		[SyncVar]
+		public bool CanBeUnregistered = false;
 
 		/*
          * Method is called by UnitsManager once per few frames when units Health is greater than zero

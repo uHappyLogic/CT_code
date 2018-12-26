@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.Core;
 using Assets.Scripts.GameUnits.Generic;
+using Assets.Scripts.Gui;
 
 namespace Assets.Scripts.GameUnits
 {
@@ -32,6 +33,14 @@ namespace Assets.Scripts.GameUnits
 		public override string GetName()
 		{
 			return "UnitsManager";
+		}
+
+		protected override void LogAdded(GameUnit actor)
+		{
+			VisibleLogger.GetInstance().LogDebug(string.Format(
+				"Unit [{0}] registered",
+				actor.GetId()
+			));
 		}
 
 		private static UnitsManager _unitsManager;

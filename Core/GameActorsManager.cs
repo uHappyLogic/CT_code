@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.GameUnits.Generic;
-using UnityEngine;
 using Mirror;
 using Assets.Scripts.Gui;
 
@@ -13,13 +12,16 @@ namespace Assets.Scripts.Core
 	{
 		public void PerformUpdate()
 		{
-			foreach (var unit in _registered.Where(u => u.CanBeUnregistered()))
+			foreach (var unit in _registered.Where(u => u.CanBeUnregistered))
 			{
-				VisibleLogger.GetInstance().LogDebug(string.Format("<color=orange>Destroying</color> unit {0}", unit.GetId()));
+				VisibleLogger.GetInstance().LogDebug(
+					string.Format("<color=orange>Destroying</color> [{0}]", unit.GetId())
+				);
+
 				NetworkServer.Destroy(unit.gameObject);
 			}
 
-			_registered.RemoveAll(u => u.CanBeUnregistered());
+			_registered.RemoveAll(u => u.CanBeUnregistered);
 
 			UpdateLifecycle();
 		}
@@ -28,12 +30,7 @@ namespace Assets.Scripts.Core
 
 		public void Add(T actor)
 		{
-			VisibleLogger.GetInstance().LogDebug(string.Format(
-				"Unit with id {0} registered to {1}",
-				actor.GetId(),
-				GetName()
-			));
-
+			LogAdded(actor);
 			_registered.Add(actor);
 		}
 
@@ -43,6 +40,8 @@ namespace Assets.Scripts.Core
 		}
 
 		public abstract string GetName();
+
+		protected abstract void LogAdded(T actor);
 
 		protected List<T> _registered = new List<T>();
 	}

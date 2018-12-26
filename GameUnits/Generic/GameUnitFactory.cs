@@ -23,7 +23,9 @@ namespace Assets.Scripts.GameUnits.Generic
 
 			_constructionStartTime = Time.time;
 
-			VisibleLogger.GetInstance().LogDebug(string.Format("Factory [{0}] initialization finished successfully", GetId()));
+			VisibleLogger.GetInstance().LogDebug(
+				string.Format("Start [{0}]", GetId())
+			);
 		}
 
 		public override void UpdateWhenUnderConstruction()
@@ -50,7 +52,9 @@ namespace Assets.Scripts.GameUnits.Generic
 		public override void OnConstructionComplete()
 		{
 			_timeOfLastSpawn = Time.time;
-			VisibleLogger.GetInstance().LogDebug(string.Format("Construction completed for {0}", GetId()));
+			VisibleLogger.GetInstance().LogDebug(
+				string.Format("OnConstructionComplete [{0}]", GetId())
+			);
 		}
 
 		public override void CompleteConstruction()
@@ -60,14 +64,13 @@ namespace Assets.Scripts.GameUnits.Generic
 
 		public override void OnDeadAction()
 		{
+			VisibleLogger.GetInstance().LogDebug(
+				string.Format("OnDeadAction [{0}]", GetId())
+			);
+
 			_timeOfDie = Time.time;
 
 			Destroy(GetComponent<NavMeshObstacle>());
-		}
-
-		public override bool CanBeUnregistered()
-		{
-			return _canBeUnregistered;
 		}
 
 		public override void UpdateAliveGameUnit()
@@ -91,7 +94,7 @@ namespace Assets.Scripts.GameUnits.Generic
 			);
 
 			if (totalDyingTime > DYING_TIME)
-				_canBeUnregistered = true;
+				CanBeUnregistered = true;
 		}
 
 		private void Spawn()
@@ -117,8 +120,6 @@ namespace Assets.Scripts.GameUnits.Generic
 		
 		private Vector3 _productionOutput = new Vector3(-50f, 0f, 15f);
 		private Vector3 _targetPositionAfterBuild;
-
-		private bool _canBeUnregistered;
 
 		private float _timeOfLastSpawn;
 		private float _timeOfDie;
