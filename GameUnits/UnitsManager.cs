@@ -21,12 +21,24 @@ namespace Assets.Scripts.GameUnits
 				if (!registeredGameUnit.hasAuthority)
 					continue;
 
-				if (registeredGameUnit.ActorAttributes.HealthPoints > 0)
+				switch(registeredGameUnit.LifeState)
 				{
-					registeredGameUnit.UpdateAliveGameUnit();
-				}	
-				else
-					registeredGameUnit.UpdateDeadGameUnit();
+					case GameActor.UnitLifeState.WAITING_FOR_DEAD_ACTION:
+						registeredGameUnit.OnDeadAction();
+						break;
+
+					case GameActor.UnitLifeState.LIVING:
+						registeredGameUnit.UpdateAliveGameUnit();
+						break;
+
+					case GameActor.UnitLifeState.DEAD:
+						registeredGameUnit.UpdateDeadGameUnit();
+						break;
+
+					default:
+						break;
+
+				}
 			}
 		}
 

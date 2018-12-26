@@ -19,7 +19,7 @@ namespace Assets.Scripts.GameUnits.Generic
 		{
 			return string.Format("{0}_{1}_{2}"
 				, ActorAttributes.ActorTypeName
-				, GetHashCode()
+				, UniqeNetworkId
 				, ActorAttributes.Team.ToString());
 		}
 
@@ -33,6 +33,24 @@ namespace Assets.Scripts.GameUnits.Generic
          */
 		[SyncVar]
 		public bool CanBeUnregistered = false;
+
+		public enum UnitLifeState
+		{
+			LIVING,
+			WAITING_FOR_DEAD_ACTION,
+			DEAD,
+			WAITING_FOR_DISPOSAL
+		}
+
+		/*
+		 * True if unit is dead
+		 */
+		[SyncVar]
+		public UnitLifeState LifeState = UnitLifeState.LIVING;
+
+
+		[SyncVar]
+		public string UniqeNetworkId;
 
 		/*
          * Method is called by UnitsManager once per few frames when units Health is greater than zero

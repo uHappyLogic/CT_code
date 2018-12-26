@@ -40,6 +40,7 @@ public class BuildOnClick : NetworkBehaviour
 
 		GameBuilding gameBuilding = newFactory.GetComponent<GameBuilding>();
 		gameBuilding.ActorAttributes.Team = team;
+		gameBuilding.UniqeNetworkId = gameBuilding.GetHashCode().ToString();
 
 		NetworkServer.SpawnWithClientAuthority(
 			newFactory,

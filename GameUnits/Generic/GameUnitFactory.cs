@@ -110,7 +110,7 @@ namespace Assets.Scripts.GameUnits.Generic
 			GameUnit gameUnit = instantiatedPrefab.GetComponent<GameUnit>();
 
 			gameUnit.ActorAttributes.Team = BuildingAttributes.Team;
-			gameUnit.gameObject.name = gameUnit.GetId();
+			gameUnit.UniqeNetworkId = gameUnit.GetHashCode().ToString();
 
 			NetworkServer.SpawnWithClientAuthority(
 				instantiatedPrefab,

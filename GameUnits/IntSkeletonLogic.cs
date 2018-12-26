@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 using Assets.Scripts.Gui;
+using Mirror;
 
 namespace Assets.Scripts.GameUnits
 {
@@ -16,6 +17,8 @@ namespace Assets.Scripts.GameUnits
 			VisibleLogger.GetInstance().LogDebug(
 				string.Format("Start [{0}]", GetId())
 			);
+	
+			name = GetId();
 		}
 
 		public override void UpdateAliveGameUnit()
@@ -32,18 +35,35 @@ namespace Assets.Scripts.GameUnits
 			Transform.localPosition += Vector3.down * Time.deltaTime * 1f;
 
 			if (Time.time - _timeOfDie > 8f)
-				CanBeUnregistered = true;
+				CmdChangeToWaitForDisposal();
+		}
+
+		[Command]
+		public void CmdChangeToWaitForDisposal()
+		{
+			LifeState = UnitLifeState.WAITING_FOR_DISPOSAL;
 		}
 
 		public override void OnDeadAction()
 		{
+			LifeState = UnitLifeState.DEAD;
+
 			VisibleLogger.GetInstance().LogDebug(
 				string.Format("OnDeadAction [{0}]", GetId())
 			);
 
+			Animator.SetBool("IsAttacking", false);
 			Animator.SetBool("IsDead", true);
 			_timeOfDie = Time.time;
 			Destroy(GetComponent<NavMeshAgent>());
+
+			CmdChangeToDead();
+		}
+
+		[Command]
+		public void CmdChangeToDead()
+		{
+			LifeState = UnitLifeState.DEAD;
 		}
 
 		private void UpdateLogic()

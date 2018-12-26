@@ -10,24 +10,53 @@ namespace Assets.Scripts.GameUnits.Generic
 
 		public void ApplyResult()
 		{
+			// apply result is triggered by animation
+			// so every animation within instances can trigger that
+			if (!hasAuthority)
+				return;
+
 			if (Defender == null)
 				return;
 
-			bool wasDefenderAliveBeforeAttack = IsAlive(Defender);
+			if (Defender.LifeState != GameActor.UnitLifeState.LIVING)
+				return;
+			
+			CmdPerfomAttack(Defender.UniqeNetworkId, Attacker.UnitAttributes.AttackPoints);
+		}
 
-			CmdPerfomAttack();
+		[Command]
+		public void CmdPerfomAttack(string defenderId, float attackPoints)
+		{
+			GameActor defender = UnitsManager.GetInstance().GetByUniqueNetworkId(defenderId);
 
-			if (wasDefenderAliveBeforeAttack && !IsAlive(Defender))
+			if (defender == null)
+				defender = BuildingsManager.GetInstance().GetByUniqueNetworkId(defenderId);
+
+			VisibleLogger.GetInstance().LogDebug(
+				string.Format("Damage [{0}] for {1}",
+					defender.GetId()
+					, attackPoints
+			));
+
+			defender.ActorAttributes.HealthPoints -= attackPoints;
+
+			if (!IsAlive(defender) && defender.LifeState == GameActor.UnitLifeState.LIVING)
 			{
-				KillsCounter.GetInstance().Increment(Defender.ActorAttributes.Team);
-				Defender.OnDeadAction();
+				VisibleLogger.GetInstance().LogDebug(
+					string.Format("Changing [{0}] state {1} -> {2}",
+						defender.GetId()
+						, defender.LifeState,
+						GameActor.UnitLifeState.WAITING_FOR_DEAD_ACTION
+				));
+
+				defender.LifeState = GameActor.UnitLifeState.WAITING_FOR_DEAD_ACTION;
 			}
 		}
 
 		[Command]
-		public void CmdPerfomAttack()
+		public void CmdSetWaitingForDeadActionState()
 		{
-			Defender.ActorAttributes.HealthPoints -= Attacker.UnitAttributes.AttackPoints;
+			Defender.LifeState = GameActor.UnitLifeState.WAITING_FOR_DEAD_ACTION;
 		}
 
 		private static bool IsAlive(GameActor ga)

@@ -24,16 +24,12 @@ namespace Assets.Scripts.GameUnits
 				gameBuilding.ActorAttributes.Team = Team;
 				gameBuilding.CompleteConstruction();
 				gameBuilding.OnConstructionComplete();
-
-				BuildingsManager.GetInstance().Add(gameBuilding);
 			}
 
 			foreach (var prePlayUnit in PrePlayUnits)
 			{
 				GameUnit gameUnit = prePlayUnit.GetComponent<GameUnit>();
 				gameUnit.ActorAttributes.Team = Team;
-
-				UnitsManager.GetInstance().Add(gameUnit);
 			}
 		}
 	}

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.Multi;
+using UnityEngine;
 using UnityEngine.AI;
 
 namespace Assets.Scripts.GameUnits.Generic
@@ -20,6 +21,11 @@ namespace Assets.Scripts.GameUnits.Generic
 		public void Start()
 		{
 			Duel.Attacker = this;
+
+			if (UnitAttributes.Team != PlayerScript.GetInstance().Team)
+			{
+				Destroy(GetComponent<NavMeshAgent>());
+			}
 		}
 	}
 }

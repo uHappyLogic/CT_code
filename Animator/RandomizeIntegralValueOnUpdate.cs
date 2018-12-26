@@ -1,13 +1,19 @@
-﻿using UnityEngine;
+﻿using Mirror;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Assets.Scripts
 {
     public class RandomizeIntegralValueOnUpdate : StateMachineBehaviour
     {
+		[SerializeField]
         public int MinInclusive;
-        public int MaxExclusive;
-        public string ParameterName;
+
+		[SerializeField]
+		public int MaxExclusive;
+
+		[SerializeField]
+		public string ParameterName;
 
         public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
