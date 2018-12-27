@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.GameUnits.Generic;
-using Mirror;
 using Assets.Scripts.Gui;
-using UnityEngine;
+using Mirror;
 
 namespace Assets.Scripts.Core
 {
@@ -17,16 +17,18 @@ namespace Assets.Scripts.Core
 				u => u.LifeState == GameActor.UnitLifeState.WAITING_FOR_DISPOSAL
 			))
 			{
-				VisibleLogger.GetInstance().LogDebug(
-					string.Format("<color=orange>Destroying</color> [{0}]", unit.GetId())
-				);
-
-				_uniqueNetworkIdToGameActorDictionary.Remove(unit.UniqeNetworkId);
 				try
 				{
-					NetworkServer.Destroy(unit.gameObject);
+					_uniqueNetworkIdToGameActorDictionary.Remove(unit.UniqeNetworkId);
+
+					if (unit.hasAuthority)
+						NetworkServer.Destroy(unit.gameObject);
+
+					VisibleLogger.GetInstance().LogDebug(
+						string.Format("<color=orange>Destroyed [{0}]</color>", unit.GetId())
+					);
 				}
-				catch (MissingReferenceException ex)
+				catch (Exception ex)
 				{
 					VisibleLogger.GetInstance().LogException(ex);
 				}
@@ -66,6 +68,16 @@ namespace Assets.Scripts.Core
 		public List<T> GetRegistered()
 		{
 			return _registered;
+		}
+
+		private void RemoveNetworkid(string networkId)
+		{
+			if (!_uniqueNetworkIdToGameActorDictionary.Remove(networkId))
+			{
+				VisibleLogger.GetInstance().LogError(
+					string.Format("Missing {0}", networkId)
+				);
+			}
 		}
 
 		public abstract string GetName();

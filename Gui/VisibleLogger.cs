@@ -25,10 +25,18 @@ namespace Assets.Scripts.Gui
 			ScrollViewContent.text += "\n" + msg;
 		}
 
+		public void LogError(string msg)
+		{
+			Debug.LogError(msg);
+			ScrollViewContent.text += string.Format("<color=red>{0}</color>",
+				msg
+			);
+		}
+
 		public void LogException(Exception e)
 		{
 			Debug.LogException(e);
-			ScrollViewContent.text += string.Format("<color=red>{0}</color>",
+			ScrollViewContent.text += string.Format("<color=purple>{0}</color>",
 				e.ToString()
 			);
 		}

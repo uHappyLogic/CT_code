@@ -43,7 +43,7 @@ namespace Assets.Scripts.GameUnits.Generic
 		 * True if unit is dead
 		 */
 		[SyncVar]
-		public UnitLifeState LifeState = UnitLifeState.LIVING;
+		public UnitLifeState LifeState;
 
 
 		[SyncVar]

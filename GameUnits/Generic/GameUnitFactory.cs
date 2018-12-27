@@ -18,8 +18,6 @@ namespace Assets.Scripts.GameUnits.Generic
 			_productionOutput = Transform.localPosition + Transform.localRotation * new Vector3(8, 0, 0);
 			_targetPositionAfterBuild = Transform.localPosition;
 
-			_isConstructionComplete = false;
-
 			_constructionStartTime = Time.time;
 
 			VisibleLogger.GetInstance().LogDebug(
@@ -151,7 +149,6 @@ namespace Assets.Scripts.GameUnits.Generic
 		private float _timeOfDie;
 		private const float DYING_TIME = 8f;
 
-		private bool _isConstructionComplete;
 		private float _constructionStartTime;
 	}
 }
