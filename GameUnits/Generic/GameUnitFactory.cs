@@ -1,8 +1,7 @@
-﻿using Assets.Scripts.Multi;
-using UnityEngine;
-using UnityEngine.AI;
+﻿using Assets.Scripts.Gui;
+using Assets.Scripts.Multi;
 using Mirror;
-using Assets.Scripts.Gui;
+using UnityEngine;
 
 namespace Assets.Scripts.GameUnits.Generic
 {
@@ -34,32 +33,46 @@ namespace Assets.Scripts.GameUnits.Generic
 
 			Transform.localPosition = (
 				_targetPositionAfterBuild + new Vector3(
-						0
-						, (1 - ((totalBuildingTime) / BuildingAttributes.ConstructionTime)) * -10 
-						, 0
-					)
+					0
+					, (1 - ((totalBuildingTime) / BuildingAttributes.ConstructionTime)) * -10
+					, 0
+				)
 			);
 
 			if (totalBuildingTime >= BuildingAttributes.ConstructionTime)
-				_isConstructionComplete = true;
+			{
+				VisibleLogger.GetInstance().LogDebug(
+					string.Format("Constucted [{0}]", GetId())
+				);
+
+				CmdChangeStateToWaitingForOnConstructed();
+			}
 		}
 
-		public override bool IsConstructionComplete()
+		[Command]
+		private void CmdChangeStateToWaitingForOnConstructed()
 		{
-			return _isConstructionComplete;
+			LifeState = UnitLifeState.WAITING_FOR_ON_CONSTRUCTED;
 		}
 
 		public override void OnConstructionComplete()
 		{
 			_timeOfLastSpawn = Time.time;
+
 			VisibleLogger.GetInstance().LogDebug(
 				string.Format("OnConstructionComplete [{0}]", GetId())
 			);
+
+			// Events that shall occur only one time per object lifetime
+			// have to be set locally to prevent multiple invocation
+			LifeState = UnitLifeState.LIVING;
+			CmdChangeStateToLiving();
 		}
 
-		public override void CompleteConstruction()
+		[Command]
+		private void CmdChangeStateToLiving()
 		{
-			_isConstructionComplete = true;
+			LifeState = UnitLifeState.LIVING;
 		}
 
 		public override void OnDeadAction()
@@ -70,7 +83,14 @@ namespace Assets.Scripts.GameUnits.Generic
 
 			_timeOfDie = Time.time;
 
-			Destroy(GetComponent<NavMeshObstacle>());
+			LifeState = UnitLifeState.DEAD;
+			CmdChangeLifeStateToDead();
+		}
+
+		[Command]
+		private void CmdChangeLifeStateToDead()
+		{
+			LifeState = UnitLifeState.DEAD;
 		}
 
 		public override void UpdateAliveGameUnit()
@@ -87,14 +107,20 @@ namespace Assets.Scripts.GameUnits.Generic
 
 			Transform.localPosition = (
 				_targetPositionAfterBuild + new Vector3(
-						0
-						, (1 - ((totalDyingTime) / DYING_TIME)) * -10
-						, 0
-					)
+					0
+					, ((totalDyingTime) / BuildingAttributes.ConstructionTime) * -10
+					, 0
+				)
 			);
 
 			if (totalDyingTime > DYING_TIME)
-				CanBeUnregistered = true;
+				CmdChangeLifeStateToWaitingForDisposal();
+		}
+
+		[Command]
+		private void CmdChangeLifeStateToWaitingForDisposal()
+		{
+			LifeState = UnitLifeState.WAITING_FOR_DISPOSAL;
 		}
 
 		private void Spawn()
@@ -117,7 +143,7 @@ namespace Assets.Scripts.GameUnits.Generic
 				PlayersManager.GetInstance().Get(BuildingAttributes.Team).connectionToClient
 			);
 		}
-		
+
 		private Vector3 _productionOutput = new Vector3(-50f, 0f, 15f);
 		private Vector3 _targetPositionAfterBuild;
 

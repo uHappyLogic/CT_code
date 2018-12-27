@@ -22,7 +22,6 @@ namespace Assets.Scripts.GameUnits
 			{
 				GameBuilding gameBuilding = prePlayBuilding.GetComponent<GameBuilding>();
 				gameBuilding.ActorAttributes.Team = Team;
-				gameBuilding.CompleteConstruction();
 				gameBuilding.OnConstructionComplete();
 			}
 

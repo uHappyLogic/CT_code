@@ -47,7 +47,7 @@ namespace Assets.Scripts.GameUnits
 			};
 
 			foreach (var currentGameObject in unitsManager.GetRegistered().Where(
-				u => u.ActorAttributes.Team != attacker.ActorAttributes.Team && u.ActorAttributes.HealthPoints > 0f)
+				u => u.ActorAttributes.Team != attacker.ActorAttributes.Team && u.LifeState == GameActor.UnitLifeState.LIVING)
 			)
 			{
 				float currentDistance = Vector3.Distance(

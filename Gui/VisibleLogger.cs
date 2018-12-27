@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.Gui
@@ -22,6 +23,14 @@ namespace Assets.Scripts.Gui
 		{
 			Debug.Log(msg);
 			ScrollViewContent.text += "\n" + msg;
+		}
+
+		public void LogException(Exception e)
+		{
+			Debug.LogException(e);
+			ScrollViewContent.text += string.Format("<color=red>{0}</color>",
+				e.ToString()
+			);
 		}
 
 		private static VisibleLogger _instance;

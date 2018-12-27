@@ -3,6 +3,7 @@ using System.Linq;
 using Assets.Scripts.GameUnits.Generic;
 using Mirror;
 using Assets.Scripts.Gui;
+using UnityEngine;
 
 namespace Assets.Scripts.Core
 {
@@ -13,7 +14,7 @@ namespace Assets.Scripts.Core
 		public void PerformUpdate()
 		{
 			foreach (var unit in _registered.Where(
-				u => u.CanBeUnregistered || u.LifeState == GameActor.UnitLifeState.WAITING_FOR_DISPOSAL
+				u => u.LifeState == GameActor.UnitLifeState.WAITING_FOR_DISPOSAL
 			))
 			{
 				VisibleLogger.GetInstance().LogDebug(
@@ -21,12 +22,26 @@ namespace Assets.Scripts.Core
 				);
 
 				_uniqueNetworkIdToGameActorDictionary.Remove(unit.UniqeNetworkId);
-				NetworkServer.Destroy(unit.gameObject);
+				try
+				{
+					NetworkServer.Destroy(unit.gameObject);
+				}
+				catch (MissingReferenceException ex)
+				{
+					VisibleLogger.GetInstance().LogException(ex);
+				}
 			}
 
-			_registered.RemoveAll(
-				u => u.CanBeUnregistered || u.LifeState == GameActor.UnitLifeState.WAITING_FOR_DISPOSAL
+			int removedCount = _registered.RemoveAll(
+				u => u.LifeState == GameActor.UnitLifeState.WAITING_FOR_DISPOSAL
 			);
+
+			if (removedCount > 0)
+			{
+				VisibleLogger.GetInstance().LogDebug(
+					string.Format("Removed {0} objects", removedCount)
+				);
+			}
 
 			UpdateLifecycle();
 		}

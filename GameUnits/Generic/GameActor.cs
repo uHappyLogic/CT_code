@@ -28,14 +28,11 @@ namespace Assets.Scripts.GameUnits.Generic
          */
 		public abstract void OnDeadAction();
 
-		/*
-         * If true then will be unregistered in next iteration, otherwise unit will remain registered
-         */
-		[SyncVar]
-		public bool CanBeUnregistered = false;
 
 		public enum UnitLifeState
 		{
+			UNDER_CONSTRUCTION,
+			WAITING_FOR_ON_CONSTRUCTED,
 			LIVING,
 			WAITING_FOR_DEAD_ACTION,
 			DEAD,

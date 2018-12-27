@@ -21,16 +21,31 @@ namespace Assets.Scripts.GameUnits
 				if (!registeredGameUnit.hasAuthority)
 					continue;
 
-				if (!registeredGameUnit.IsConstructionComplete())
+				switch (registeredGameUnit.LifeState)
 				{
-					registeredGameUnit.UpdateWhenUnderConstruction();
-					continue;
-				}
+					case GameActor.UnitLifeState.UNDER_CONSTRUCTION:
+						registeredGameUnit.UpdateWhenUnderConstruction();
+						break;
 
-				if (registeredGameUnit.ActorAttributes.HealthPoints > 0)
-					registeredGameUnit.UpdateAliveGameUnit();
-				else
-					registeredGameUnit.UpdateDeadGameUnit();
+					case GameActor.UnitLifeState.WAITING_FOR_ON_CONSTRUCTED:
+						registeredGameUnit.OnConstructionComplete();
+						break;
+
+					case GameActor.UnitLifeState.LIVING:
+						registeredGameUnit.UpdateAliveGameUnit();
+						break;
+
+					case GameActor.UnitLifeState.WAITING_FOR_DEAD_ACTION:
+						registeredGameUnit.OnDeadAction();
+						break;
+						
+					case GameActor.UnitLifeState.DEAD:
+						registeredGameUnit.UpdateDeadGameUnit();
+						break;
+
+					default:
+						break;
+				}
 			}
 		}
 
