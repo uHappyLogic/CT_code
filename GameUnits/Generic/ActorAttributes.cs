@@ -15,5 +15,8 @@ namespace Assets.Scripts.GameUnits.Generic
 
 		[SerializeField]
 		public string ActorTypeName;
+
+		[SerializeField]
+		public int KillReward;
     }
 }

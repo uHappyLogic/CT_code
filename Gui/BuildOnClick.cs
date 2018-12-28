@@ -36,6 +36,9 @@ public class BuildOnClick : NetworkBehaviour
 	{
 		var newFactory = Instantiate(BuildingToBuild);
 
+		PlayersManager.GetInstance().Get(team).Gold -=
+			BuildingToBuild.GetComponent<GameBuilding>().BuildingAttributes.BuildCost;
+
 		newFactory.transform.position = position;
 
 		GameBuilding gameBuilding = newFactory.GetComponent<GameBuilding>();

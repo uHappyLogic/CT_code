@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Gui;
+using Assets.Scripts.Multi;
 using Mirror;
 
 namespace Assets.Scripts.GameUnits.Generic
@@ -21,11 +22,11 @@ namespace Assets.Scripts.GameUnits.Generic
 			if (Defender.LifeState != GameActor.UnitLifeState.LIVING)
 				return;
 			
-			CmdPerfomAttack(Defender.UniqeNetworkId, Attacker.UnitAttributes.AttackPoints);
+			CmdPerfomAttack(Defender.UniqeNetworkId, Attacker.ActorAttributes.Team, Attacker.UnitAttributes.AttackPoints);
 		}
 
 		[Command]
-		public void CmdPerfomAttack(string defenderId, float attackPoints)
+		public void CmdPerfomAttack(string defenderId, Team attackerTeam, float attackPoints)
 		{
 			GameActor defender = UnitsManager.GetInstance().GetByUniqueNetworkId(defenderId);
 
@@ -40,7 +41,7 @@ namespace Assets.Scripts.GameUnits.Generic
 
 			defender.ActorAttributes.HealthPoints -= attackPoints;
 
-			if (!IsAlive(defender) && defender.LifeState == GameActor.UnitLifeState.LIVING)
+			if (HpLessThanZero(defender) && defender.LifeState == GameActor.UnitLifeState.LIVING)
 			{
 				VisibleLogger.GetInstance().LogDebug(
 					string.Format("Changing [{0}] state {1} -> {2}",
@@ -48,6 +49,8 @@ namespace Assets.Scripts.GameUnits.Generic
 						, defender.LifeState,
 						GameActor.UnitLifeState.WAITING_FOR_DEAD_ACTION
 				));
+
+				PlayersManager.GetInstance().Get(attackerTeam).Gold += defender.ActorAttributes.KillReward;
 
 				defender.LifeState = GameActor.UnitLifeState.WAITING_FOR_DEAD_ACTION;
 			}
@@ -59,9 +62,9 @@ namespace Assets.Scripts.GameUnits.Generic
 			Defender.LifeState = GameActor.UnitLifeState.WAITING_FOR_DEAD_ACTION;
 		}
 
-		private static bool IsAlive(GameActor ga)
+		private static bool HpLessThanZero(GameActor ga)
 		{
-			return ga.ActorAttributes.HealthPoints > 0f;
+			return ga.ActorAttributes.HealthPoints <= 0f;
 		}
 	}
 }

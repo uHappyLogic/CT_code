@@ -18,13 +18,14 @@ namespace Assets.Scripts.Multi
 			{
 				CmdSpawnPointer();
 				Team = PlayersManager.GetInstance().Add(this);
+				Gold = 200;
 			}
 		}
 		
 		[Command]
 		public void CmdSpawnPointer()
 		{
-			GameObject pointer = (GameObject)Instantiate(TerrainPointer, transform.position, Quaternion.identity);
+			GameObject pointer = Instantiate(TerrainPointer, transform.position, Quaternion.identity);
 			NetworkServer.SpawnWithClientAuthority(pointer, connectionToClient);
 		}
 
@@ -36,6 +37,9 @@ namespace Assets.Scripts.Multi
 		private static PlayerScript _instance;
 
 		[SyncVar]
-		public Team Team;	
+		public Team Team;
+
+		[SyncVar]
+		public int Gold;
 	}
 }

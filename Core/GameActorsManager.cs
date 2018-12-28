@@ -21,8 +21,15 @@ namespace Assets.Scripts.Core
 				{
 					_uniqueNetworkIdToGameActorDictionary.Remove(unit.UniqeNetworkId);
 
-					if (unit.hasAuthority)
-						NetworkServer.Destroy(unit.gameObject);
+					try
+					{
+						if (unit.hasAuthority)
+							NetworkServer.Destroy(unit.gameObject);
+					}
+					catch(Exception e)
+					{
+						VisibleLogger.GetInstance().LogException(e);
+					}
 
 					VisibleLogger.GetInstance().LogDebug(
 						string.Format("<color=orange>Destroyed [{0}]</color>", unit.GetId())
